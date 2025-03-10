@@ -1,2 +1,286 @@
 ﻿  Camera.cpp
-  Win32SimpleSample.vcxproj -> D:\CMP405\WFFC-Edit\WOFFCEdit\Debug\WoFEdit.exe
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(21,25): error C2061: syntax error: identifier 'DXGI_FORMAT'
+  (compiling source file 'Camera.cpp')
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(38,21): error C2143: syntax error: missing ';' before '*'
+  (compiling source file 'Camera.cpp')
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(38,9): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+  (compiling source file 'Camera.cpp')
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(38,73): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+  (compiling source file 'Camera.cpp')
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(39,22): error C2143: syntax error: missing ';' before '*'
+  (compiling source file 'Camera.cpp')
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(39,9): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+  (compiling source file 'Camera.cpp')
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(39,73): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+  (compiling source file 'Camera.cpp')
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(40,28): error C2143: syntax error: missing ';' before '*'
+  (compiling source file 'Camera.cpp')
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(40,9): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+  (compiling source file 'Camera.cpp')
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(40,73): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+  (compiling source file 'Camera.cpp')
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(41,29): error C2143: syntax error: missing ';' before '*'
+  (compiling source file 'Camera.cpp')
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(41,9): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+  (compiling source file 'Camera.cpp')
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(41,73): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+  (compiling source file 'Camera.cpp')
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(42,23): error C2143: syntax error: missing ';' before '*'
+  (compiling source file 'Camera.cpp')
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(42,9): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+  (compiling source file 'Camera.cpp')
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(42,73): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+  (compiling source file 'Camera.cpp')
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(43,24): error C2143: syntax error: missing ';' before '*'
+  (compiling source file 'Camera.cpp')
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(43,9): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+  (compiling source file 'Camera.cpp')
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(43,73): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+  (compiling source file 'Camera.cpp')
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(44,33): error C3646: 'GetDeviceFeatureLevel': unknown override specifier
+  (compiling source file 'Camera.cpp')
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(44,54): error C2059: syntax error: '('
+  (compiling source file 'Camera.cpp')
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(44,73): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+  (compiling source file 'Camera.cpp')
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(45,31): error C2143: syntax error: missing ';' before '*'
+  (compiling source file 'Camera.cpp')
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(45,9): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+  (compiling source file 'Camera.cpp')
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(45,73): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+  (compiling source file 'Camera.cpp')
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(46,31): error C2143: syntax error: missing ';' before '*'
+  (compiling source file 'Camera.cpp')
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(46,9): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+  (compiling source file 'Camera.cpp')
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(46,73): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+  (compiling source file 'Camera.cpp')
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(47,33): error C3646: 'GetBackBufferFormat': unknown override specifier
+  (compiling source file 'Camera.cpp')
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(47,52): error C2059: syntax error: '('
+  (compiling source file 'Camera.cpp')
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(47,73): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+  (compiling source file 'Camera.cpp')
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(48,33): error C3646: 'GetDepthBufferFormat': unknown override specifier
+  (compiling source file 'Camera.cpp')
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(48,53): error C2059: syntax error: '('
+  (compiling source file 'Camera.cpp')
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(48,73): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+  (compiling source file 'Camera.cpp')
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(49,33): error C3646: 'GetScreenViewport': unknown override specifier
+  (compiling source file 'Camera.cpp')
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(49,50): error C2059: syntax error: '('
+  (compiling source file 'Camera.cpp')
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(49,73): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+  (compiling source file 'Camera.cpp')
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(78,33): error C2061: syntax error: identifier 'IDXGIAdapter1'
+  (compiling source file 'Camera.cpp')
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(81,32): error C2065: 'ID3D11Device': undeclared identifier
+  (compiling source file 'Camera.cpp')
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(81,25): error C2923: 'Microsoft::WRL::ComPtr': 'ID3D11Device' is not a valid template type argument for parameter 'T'
+  (compiling source file 'Camera.cpp')
+      D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(81,32):
+      see declaration of 'ID3D11Device'
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(82,32): error C2065: 'ID3D11Device1': undeclared identifier
+  (compiling source file 'Camera.cpp')
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(82,25): error C2923: 'Microsoft::WRL::ComPtr': 'ID3D11Device1' is not a valid template type argument for parameter 'T'
+  (compiling source file 'Camera.cpp')
+      D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(82,32):
+      see declaration of 'ID3D11Device1'
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(83,32): error C2065: 'ID3D11DeviceContext': undeclared identifier
+  (compiling source file 'Camera.cpp')
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(83,25): error C2923: 'Microsoft::WRL::ComPtr': 'ID3D11DeviceContext' is not a valid template type argument for parameter 'T'
+  (compiling source file 'Camera.cpp')
+      D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(83,32):
+      see declaration of 'ID3D11DeviceContext'
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(84,32): error C2065: 'ID3D11DeviceContext1': undeclared identifier
+  (compiling source file 'Camera.cpp')
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(84,25): error C2923: 'Microsoft::WRL::ComPtr': 'ID3D11DeviceContext1' is not a valid template type argument for parameter 'T'
+  (compiling source file 'Camera.cpp')
+      D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(84,32):
+      see declaration of 'ID3D11DeviceContext1'
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(85,32): error C2065: 'IDXGISwapChain': undeclared identifier
+  (compiling source file 'Camera.cpp')
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(85,25): error C2923: 'Microsoft::WRL::ComPtr': 'IDXGISwapChain' is not a valid template type argument for parameter 'T'
+  (compiling source file 'Camera.cpp')
+      D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(85,32):
+      see declaration of 'IDXGISwapChain'
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(86,32): error C2065: 'IDXGISwapChain1': undeclared identifier
+  (compiling source file 'Camera.cpp')
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(86,25): error C2923: 'Microsoft::WRL::ComPtr': 'IDXGISwapChain1' is not a valid template type argument for parameter 'T'
+  (compiling source file 'Camera.cpp')
+      D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(86,32):
+      see declaration of 'IDXGISwapChain1'
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(87,32): error C2065: 'ID3DUserDefinedAnnotation': undeclared identifier
+  (compiling source file 'Camera.cpp')
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(87,25): error C2923: 'Microsoft::WRL::ComPtr': 'ID3DUserDefinedAnnotation' is not a valid template type argument for parameter 'T'
+  (compiling source file 'Camera.cpp')
+      D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(87,32):
+      see declaration of 'ID3DUserDefinedAnnotation'
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(90,32): error C2065: 'ID3D11RenderTargetView': undeclared identifier
+  (compiling source file 'Camera.cpp')
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(90,25): error C2923: 'Microsoft::WRL::ComPtr': 'ID3D11RenderTargetView' is not a valid template type argument for parameter 'T'
+  (compiling source file 'Camera.cpp')
+      D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(90,32):
+      see declaration of 'ID3D11RenderTargetView'
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(91,32): error C2065: 'ID3D11DepthStencilView': undeclared identifier
+  (compiling source file 'Camera.cpp')
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(91,25): error C2923: 'Microsoft::WRL::ComPtr': 'ID3D11DepthStencilView' is not a valid template type argument for parameter 'T'
+  (compiling source file 'Camera.cpp')
+      D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(91,32):
+      see declaration of 'ID3D11DepthStencilView'
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(92,57): error C3646: 'm_screenViewport': unknown override specifier
+  (compiling source file 'Camera.cpp')
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(92,9): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+  (compiling source file 'Camera.cpp')
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(95,57): error C3646: 'm_backBufferFormat': unknown override specifier
+  (compiling source file 'Camera.cpp')
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(95,9): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+  (compiling source file 'Camera.cpp')
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(96,57): error C3646: 'm_depthBufferFormat': unknown override specifier
+  (compiling source file 'Camera.cpp')
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(96,9): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+  (compiling source file 'Camera.cpp')
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(98,57): error C3646: 'm_d3dMinFeatureLevel': unknown override specifier
+  (compiling source file 'Camera.cpp')
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(98,9): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+  (compiling source file 'Camera.cpp')
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(102,57): error C3646: 'm_d3dFeatureLevel': unknown override specifier
+  (compiling source file 'Camera.cpp')
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(102,9): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+  (compiling source file 'Camera.cpp')
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(55,17): error C2451: a conditional expression of type 'Microsoft::WRL::ComPtr' is not valid
+  (compiling source file 'Camera.cpp')
+      D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(55,17):
+      No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(57,17): error C2678: binary '->': no operator found which takes a left-hand operand of type 'Microsoft::WRL::ComPtr' (or there is no acceptable conversion)
+  (compiling source file 'Camera.cpp')
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\winrt\wrl\client.h(379,20):
+      could be 'T *Microsoft::WRL::ComPtr<T>::operator ->(void) throw() const'
+          D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(57,17):
+          'T *Microsoft::WRL::ComPtr<T>::operator ->(void) throw() const': cannot convert 'this' pointer from 'Microsoft::WRL::ComPtr' to 'const Microsoft::WRL::ComPtr<T> &'
+              D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(57,17):
+              Reason: cannot convert from 'Microsoft::WRL::ComPtr' to 'const Microsoft::WRL::ComPtr<T>'
+              D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(57,17):
+              Conversion requires a second user-defined-conversion operator or constructor
+      D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(57,17):
+      while trying to match the argument list '(Microsoft::WRL::ComPtr)'
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(57,34): error C2039: 'BeginEvent': is not a member of 'Microsoft::WRL::ComPtr'
+  (compiling source file 'Camera.cpp')
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\winrt\wrl\client.h(210,7):
+      see declaration of 'Microsoft::WRL::ComPtr'
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(63,17): error C2451: a conditional expression of type 'Microsoft::WRL::ComPtr' is not valid
+  (compiling source file 'Camera.cpp')
+      D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(63,17):
+      No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(65,17): error C2678: binary '->': no operator found which takes a left-hand operand of type 'Microsoft::WRL::ComPtr' (or there is no acceptable conversion)
+  (compiling source file 'Camera.cpp')
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\winrt\wrl\client.h(379,20):
+      could be 'T *Microsoft::WRL::ComPtr<T>::operator ->(void) throw() const'
+          D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(65,17):
+          'T *Microsoft::WRL::ComPtr<T>::operator ->(void) throw() const': cannot convert 'this' pointer from 'Microsoft::WRL::ComPtr' to 'const Microsoft::WRL::ComPtr<T> &'
+              D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(65,17):
+              Reason: cannot convert from 'Microsoft::WRL::ComPtr' to 'const Microsoft::WRL::ComPtr<T>'
+              D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(65,17):
+              Conversion requires a second user-defined-conversion operator or constructor
+      D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(65,17):
+      while trying to match the argument list '(Microsoft::WRL::ComPtr)'
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(65,34): error C2039: 'EndEvent': is not a member of 'Microsoft::WRL::ComPtr'
+  (compiling source file 'Camera.cpp')
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\winrt\wrl\client.h(210,7):
+      see declaration of 'Microsoft::WRL::ComPtr'
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(71,17): error C2451: a conditional expression of type 'Microsoft::WRL::ComPtr' is not valid
+  (compiling source file 'Camera.cpp')
+      D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(71,17):
+      No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(73,17): error C2678: binary '->': no operator found which takes a left-hand operand of type 'Microsoft::WRL::ComPtr' (or there is no acceptable conversion)
+  (compiling source file 'Camera.cpp')
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\winrt\wrl\client.h(379,20):
+      could be 'T *Microsoft::WRL::ComPtr<T>::operator ->(void) throw() const'
+          D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(73,17):
+          'T *Microsoft::WRL::ComPtr<T>::operator ->(void) throw() const': cannot convert 'this' pointer from 'Microsoft::WRL::ComPtr' to 'const Microsoft::WRL::ComPtr<T> &'
+              D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(73,17):
+              Reason: cannot convert from 'Microsoft::WRL::ComPtr' to 'const Microsoft::WRL::ComPtr<T>'
+              D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(73,17):
+              Conversion requires a second user-defined-conversion operator or constructor
+      D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(73,17):
+      while trying to match the argument list '(Microsoft::WRL::ComPtr)'
+  
+D:\CMP405\WFFC-Edit\WOFFCEdit\DeviceResources.h(73,34): error C2039: 'SetMarker': is not a member of 'Microsoft::WRL::ComPtr'
+  (compiling source file 'Camera.cpp')
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\winrt\wrl\client.h(210,7):
+      see declaration of 'Microsoft::WRL::ComPtr'
+  
