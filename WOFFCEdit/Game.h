@@ -11,6 +11,7 @@
 #include "DisplayChunk.h"
 #include "ChunkObject.h"
 #include "InputCommands.h"
+#include "Camera.h"
 #include <vector>
 
 
@@ -52,6 +53,7 @@ public:
 	void ClearDisplayList();
 
 	std::vector<int> MousePicking(bool multiSelect);
+	void MoveObjects(std::vector<int>& selectedIDs);
 #ifdef DXTK_AUDIO
 	void NewAudioDevice();
 #endif
@@ -70,19 +72,9 @@ private:
 	std::vector<DisplayObject>			m_displayList;
 	DisplayChunk						m_displayChunk;
 	InputCommands						m_InputCommands;
-
+	Camera								m_Camera;
 	//functionality
-	float								m_movespeed;
 
-	//camera
-	DirectX::SimpleMath::Vector3		m_camPosition;
-	DirectX::SimpleMath::Vector3		m_camOrientation;
-	DirectX::SimpleMath::Vector3		m_camLookAt;
-	DirectX::SimpleMath::Vector3		m_camLookDirection;
-	DirectX::SimpleMath::Vector3		m_camRight;
-	DirectX::SimpleMath::Vector3		m_camUp;
-	float m_camRotRate;
-	bool doOnce = false;
 	//control variables
 	bool m_grid;							//grid rendering on / off
 	// Device resources.
@@ -126,7 +118,7 @@ private:
 #endif
 
     DirectX::SimpleMath::Matrix                                             m_world;
-    DirectX::SimpleMath::Matrix                                             m_view;
+  // DirectX::SimpleMath::Matrix                                             m_view;
     DirectX::SimpleMath::Matrix                                             m_projection;
 
 	POINT prevMousePos;

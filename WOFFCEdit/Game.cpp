@@ -25,38 +25,7 @@ Game::Game()
 	//modes
 	m_grid = false;
 
-	//functional
-	m_movespeed = 0.30;
-	m_camRotRate = 3.0;
 
-	//camera
-	m_camPosition.x = 0.0f;
-	m_camPosition.y = 3.7f;
-	m_camPosition.z = -3.5f;
-
-	m_camOrientation.x = 0;
-	m_camOrientation.y = 0;
-	m_camOrientation.z = 0;
-
-	m_camLookAt.x = 0.0f;
-	m_camLookAt.y = 0.0f;
-	m_camLookAt.z = 0.0f;
-
-	m_camLookDirection.x = 0.0f;
-	m_camLookDirection.y = 0.0f;
-	m_camLookDirection.z = 0.0f;
-
-	m_camRight.x = 0.0f;
-	m_camRight.y = 0.0f;
-	m_camRight.z = 0.0f;	
-	
-	m_camUp.x = 0.0f;
-	m_camUp.y = 0.0f;
-	m_camUp.z = 0.0f;
-
-	m_camOrientation.x = 0.0f;
-	m_camOrientation.y = 0.0f;
-	m_camOrientation.z = 0.0f;
 
 }
 
@@ -129,6 +98,8 @@ void Game::Tick(InputCommands *Input)
     m_timer.Tick([&]()
     {
         Update(m_timer);
+		m_Camera.Tick(&m_InputCommands);
+		m_Camera.Update(m_timer);
     });
 
 #ifdef DXTK_AUDIO
@@ -147,84 +118,10 @@ void Game::Tick(InputCommands *Input)
 // Updates the world.
 void Game::Update(DX::StepTimer const& timer)
 {
-	//TODO  any more complex than this, and the camera should be abstracted out to somewhere else
-	//camera motion is on a plane, so kill the 7 component of the look direction
-	Vector3 planarMotionVector = m_camLookDirection;
-	planarMotionVector.y = 0.0;
-
-	if (m_InputCommands.middleMouseDown)
-	{
-		
-		GetCursorPos(&currMousePos);
-
-		float moveX = (float)(currMousePos.x - prevMousePos.x);
-		float moveY = (float)(currMousePos.y - prevMousePos.y);
-
-		m_camOrientation.y += moveX * m_camRotRate * m_movespeed;
-		m_camOrientation.x -= moveY * m_camRotRate * m_movespeed;
-
-
-		if (m_camOrientation.x > 89.f)			m_camOrientation.x = 89.f;
-		else if (m_camOrientation.x < -89.f)	m_camOrientation.x = -89.f;
-
-		prevMousePos = currMousePos;
-	}
-	else if (!m_InputCommands.middleMouseDown)
-	{
-		GetCursorPos(&prevMousePos);
-	}
-
-
-	//create look direction from Euler angles in m_camOrientation
-	m_camLookDirection.x = 0.5 * cos(m_camOrientation.y * 3.14159265f / 180.0f) * cos(m_camOrientation.x * 3.14159265f / 180.0f);
-	m_camLookDirection.y = 0.5 * sin(m_camOrientation.x * 3.14159265f / 180.0f);
-	m_camLookDirection.z = 0.5 * sin(m_camOrientation.y * 3.14159265f / 180.0f) * cos(m_camOrientation.x * 3.14159265f / 180.0f);
-	m_camLookDirection.Normalize();
-
-	//create right vector from look Direction
-	m_camLookDirection.Cross(Vector3::UnitY, m_camRight);
-	if (!doOnce)
-	{
-		m_camLookDirection.Cross(Vector3::UnitZ, m_camUp);
-		doOnce = true;
-	}
 	
-
-	//process input and update stuff
-	if (m_InputCommands.forward)
-	{	
-		m_camPosition += m_camLookDirection*m_movespeed;
-	}
-	if (m_InputCommands.back)
-	{
-		m_camPosition -= m_camLookDirection*m_movespeed;
-	}
-	if (m_InputCommands.right)
-	{
-		m_camPosition += m_camRight*m_movespeed;
-	}
-	if (m_InputCommands.left)
-	{
-		m_camPosition -= m_camRight*m_movespeed;
-	}
-	if (m_InputCommands.up)
-	{
-		m_camPosition -= m_camUp*m_movespeed;
-	}
-	if (m_InputCommands.down)
-	{
-		m_camPosition += m_camUp * m_movespeed;
-	}
-	
-	//update lookat point
-	m_camLookAt = m_camPosition + m_camLookDirection;
-
-	//apply camera vectors
-    m_view = Matrix::CreateLookAt(m_camPosition, m_camLookAt, Vector3::UnitY);
-
-    m_batchEffect->SetView(m_view);
+    m_batchEffect->SetView(m_Camera.GetViewMatrix());
     m_batchEffect->SetWorld(Matrix::Identity);
-	m_displayChunk.m_terrainEffect->SetView(m_view);
+	m_displayChunk.m_terrainEffect->SetView(m_Camera.GetViewMatrix());
 	m_displayChunk.m_terrainEffect->SetWorld(Matrix::Identity);
 
 #ifdef DXTK_AUDIO
@@ -281,7 +178,7 @@ void Game::Render()
 	//CAMERA POSITION ON HUD
 	m_sprites->Begin();
 	WCHAR   Buffer[256];
-	std::wstring var = L"Cam X: " + std::to_wstring(m_camPosition.x) + L"Cam Z: " + std::to_wstring(m_camPosition.z);
+	std::wstring var = L"Cam X: " + std::to_wstring(m_Camera.GetPosition().x) + L"Cam Z: " + std::to_wstring(m_Camera.GetPosition().z);
 	m_font->DrawString(m_sprites.get(), var.c_str() , XMFLOAT2(100, 10), Colors::Yellow);
 	m_sprites->End();
 
@@ -300,7 +197,7 @@ void Game::Render()
 
 		XMMATRIX local = m_world * XMMatrixTransformation(g_XMZero, Quaternion::Identity, scale, g_XMZero, rotate, translate);
 
-		m_displayList[i].m_model->Draw(context, *m_states, local, m_view, m_projection, false);	//last variable in draw,  make TRUE for wireframe
+		m_displayList[i].m_model->Draw(context, *m_states, local, m_Camera.GetViewMatrix(), m_projection, false);	//last variable in draw,  make TRUE for wireframe
 
 		m_deviceResources->PIXEndEvent();
 	}
@@ -637,7 +534,6 @@ void Game::OnDeviceRestored()
 
 std::wstring StringToWCHART(std::string s)
 {
-
 	int len;
 	int slength = (int)s.length() + 1;
 	len = MultiByteToWideChar(CP_ACP, 0, s.c_str(), slength, 0, 0);
@@ -650,7 +546,6 @@ std::wstring StringToWCHART(std::string s)
 
 std::vector<int> Game::MousePicking(bool multiSelect)
 {
-
 	int selected = -1;
 	float pickedDistance = 0;
 
@@ -674,9 +569,9 @@ std::vector<int> Game::MousePicking(bool multiSelect)
 		XMMATRIX local = m_world * XMMatrixTransformation(g_XMZero, Quaternion::Identity, scale, g_XMZero, rotate, translate);
 
 		//Unproject the points on the near and far plane, with respect to the matrix we just created.
-		XMVECTOR nearPoint = XMVector3Unproject(nearSource, 0.0f, 0.0f, m_ScreenDimensions.right, m_ScreenDimensions.bottom, m_deviceResources->GetScreenViewport().MinDepth, m_deviceResources->GetScreenViewport().MaxDepth, m_projection, m_view, local);
+		XMVECTOR nearPoint = XMVector3Unproject(nearSource, 0.0f, 0.0f, m_ScreenDimensions.right, m_ScreenDimensions.bottom, m_deviceResources->GetScreenViewport().MinDepth, m_deviceResources->GetScreenViewport().MaxDepth, m_projection, m_Camera.GetViewMatrix(), local);
 
-		XMVECTOR farPoint = XMVector3Unproject(farSource, 0.0f, 0.0f, m_ScreenDimensions.right, m_ScreenDimensions.bottom, m_deviceResources->GetScreenViewport().MinDepth, m_deviceResources->GetScreenViewport().MaxDepth, m_projection, m_view, local);
+		XMVECTOR farPoint = XMVector3Unproject(farSource, 0.0f, 0.0f, m_ScreenDimensions.right, m_ScreenDimensions.bottom, m_deviceResources->GetScreenViewport().MinDepth, m_deviceResources->GetScreenViewport().MaxDepth, m_projection, m_Camera.GetViewMatrix(), local);
 
 		//turn the transformed points into our picking vector. 
 		XMVECTOR pickingVector = farPoint - nearPoint;
@@ -698,6 +593,7 @@ std::vector<int> Game::MousePicking(bool multiSelect)
 				}
 			}
 		}
+		
 	}
 
 	if (selected != -1)
@@ -717,12 +613,11 @@ std::vector<int> Game::MousePicking(bool multiSelect)
 			else
 				selectedID.clear();
 		}
-		else 
+		else
 		{
 			selectedID.clear();
 			selectedID.push_back(selected);
 		}
-		
 	}
 	else
 	{
@@ -733,4 +628,23 @@ std::vector<int> Game::MousePicking(bool multiSelect)
 	//if we got a hit.  return it.  
 	return selectedID;
 
+}
+
+void Game::MoveObjects(std::vector<int>& selectedIDs)
+{
+	if (selectedIDs.empty())
+		return;
+
+	if (m_displayList.empty())
+		return;
+
+	for (int i = 0; i < selectedIDs.size(); i++)
+	{
+		if (m_InputCommands.forward)	m_displayList[selectedIDs[i]].m_position.z += 0.1f;
+		if (m_InputCommands.back)		m_displayList[selectedIDs[i]].m_position.z -= 0.1f;
+		if (m_InputCommands.left)		m_displayList[selectedIDs[i]].m_position.x += 0.1f;
+		if (m_InputCommands.right)		m_displayList[selectedIDs[i]].m_position.x -= 0.1f;
+		if (m_InputCommands.up)			m_displayList[selectedIDs[i]].m_position.y += 0.1f;
+		if (m_InputCommands.down)		m_displayList[selectedIDs[i]].m_position.y -= 0.1f;
+	}
 }

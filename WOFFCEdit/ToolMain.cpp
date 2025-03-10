@@ -19,10 +19,14 @@ ToolMain::ToolMain()
 	m_toolInputCommands.back			= false;
 	m_toolInputCommands.left			= false;
 	m_toolInputCommands.right			= false;
-	m_toolInputCommands.middleMouseDown = false;
+	m_toolInputCommands.mouse_Mid_Down = false;
 	m_toolInputCommands.mouse_LB_Down	= false;
 	m_toolInputCommands.mouse_X			= 0;
 	m_toolInputCommands.mouse_Y			= 0;
+
+	m_toolInputCommands.g_key_down = false;
+
+	m_toolInputCommands.editMode = CameraMove;
 }
 
 
@@ -297,6 +301,21 @@ void ToolMain::Tick(MSG *msg)
 		m_toolInputCommands.mouse_LB_Down = false;
 	}
 
+	if (m_selectedObject.size() > 0 && m_toolInputCommands.editMode == ModelMove)
+	{
+		if (m_toolInputCommands.left || m_toolInputCommands.right || m_toolInputCommands.forward || m_toolInputCommands.back || m_toolInputCommands.up || m_toolInputCommands.down)
+		{
+			m_d3dRenderer.MoveObjects(m_selectedObject);
+		}
+	}
+
+	if (m_toolInputCommands.tabDown && !m_toolInputCommands.tabPrevState)
+	{
+		m_toolInputCommands.editMode++;
+		if (m_toolInputCommands.editMode > ModelScale) 	
+			m_toolInputCommands.editMode = CameraMove;
+	}
+	m_toolInputCommands.tabPrevState = m_toolInputCommands.tabDown;
 
 	//Renderer Update Call
 	m_d3dRenderer.Tick(&m_toolInputCommands);
@@ -304,7 +323,6 @@ void ToolMain::Tick(MSG *msg)
 
 void ToolMain::UpdateInput(MSG * msg)
 {
-
 	switch (msg->message)
 	{
 		//Global inputs,  mouse position and keys etc
@@ -325,54 +343,39 @@ void ToolMain::UpdateInput(MSG * msg)
 		m_toolInputCommands.mouse_LB_Down = true;
 		break;
 	case WM_MBUTTONDOWN:
-		m_toolInputCommands.middleMouseDown = true;
+		m_toolInputCommands.mouse_Mid_Down = true;
 		break;
 	case WM_MBUTTONUP:
-		m_toolInputCommands.middleMouseDown = false;
+		m_toolInputCommands.mouse_Mid_Down = false;
 		break;
 	
 	}
 	//here we update all the actual app functionality that we want.  This information will either be used int toolmain, or sent down to the renderer (Camera movement etc
 	//WASD movement
-	if (m_keyArray['W'])
-	{
-		m_toolInputCommands.forward = true;
-	}
-	else m_toolInputCommands.forward = false;
+	if (m_keyArray['W'])	m_toolInputCommands.forward = true;
+	else					m_toolInputCommands.forward = false;
 	
-	if (m_keyArray['S'])
-	{
-		m_toolInputCommands.back = true;
-	}
-	else m_toolInputCommands.back = false;
-	if (m_keyArray['A'])
-	{
-		m_toolInputCommands.left = true;
-	}
-	else m_toolInputCommands.left = false;
+	if (m_keyArray['S'])	m_toolInputCommands.back = true;
+	else					m_toolInputCommands.back = false;
 
-	if (m_keyArray['D'])
-	{
-		m_toolInputCommands.right = true;
-	}
-	else m_toolInputCommands.right = false;
+	if (m_keyArray['A'])	m_toolInputCommands.left = true;
+	else					m_toolInputCommands.left = false;
+
+	if (m_keyArray['D'])	m_toolInputCommands.right = true;
+	else					m_toolInputCommands.right = false;
 	//rotation
-	if (m_keyArray['E'])
-	{
-		m_toolInputCommands.up = true;
-	}
-	else m_toolInputCommands.up = false;
-	if (m_keyArray['Q'])
-	{
-		m_toolInputCommands.down = true;
-	}
-	else m_toolInputCommands.down = false;
+	if (m_keyArray['E'])	m_toolInputCommands.up = true;
+	else					m_toolInputCommands.up = false;
 
-	if (m_keyArray[VK_CONTROL])
-	{
-		m_toolInputCommands.ctrlDown = true;
-	}
-	else m_toolInputCommands.ctrlDown = false;
+	if (m_keyArray['Q'])	m_toolInputCommands.down = true;
+	else					m_toolInputCommands.down = false;
 
-	//WASD
+	if (m_keyArray[VK_CONTROL]) m_toolInputCommands.ctrlDown = true;
+	else						m_toolInputCommands.ctrlDown = false;
+
+	if (m_keyArray[VK_TAB])		m_toolInputCommands.tabDown = true;
+	else						m_toolInputCommands.tabDown = false;
+
+
+
 }
