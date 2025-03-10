@@ -6,6 +6,7 @@
 #include "Game.h"
 #include "DisplayObject.h"
 #include <string>
+#include <algorithm>
 
 
 using namespace DirectX;
@@ -47,7 +48,11 @@ Game::Game()
 
 	m_camRight.x = 0.0f;
 	m_camRight.y = 0.0f;
-	m_camRight.z = 0.0f;
+	m_camRight.z = 0.0f;	
+	
+	m_camUp.x = 0.0f;
+	m_camUp.y = 0.0f;
+	m_camUp.z = 0.0f;
 
 	m_camOrientation.x = 0.0f;
 	m_camOrientation.y = 0.0f;
@@ -83,6 +88,8 @@ void Game::Initialize(HWND window, int width, int height)
 
     m_deviceResources->CreateWindowSizeDependentResources();
     CreateWindowSizeDependentResources();
+
+	GetClientRect(window, &m_ScreenDimensions);
 
 #ifdef DXTK_AUDIO
     // Create DirectXTK for Audio objects
@@ -145,22 +152,43 @@ void Game::Update(DX::StepTimer const& timer)
 	Vector3 planarMotionVector = m_camLookDirection;
 	planarMotionVector.y = 0.0;
 
-	if (m_InputCommands.rotRight)
+	if (m_InputCommands.middleMouseDown)
 	{
-		m_camOrientation.y -= m_camRotRate;
+		
+		GetCursorPos(&currMousePos);
+
+		float moveX = (float)(currMousePos.x - prevMousePos.x);
+		float moveY = (float)(currMousePos.y - prevMousePos.y);
+
+		m_camOrientation.y += moveX * m_camRotRate * m_movespeed;
+		m_camOrientation.x -= moveY * m_camRotRate * m_movespeed;
+
+
+		if (m_camOrientation.x > 89.f)			m_camOrientation.x = 89.f;
+		else if (m_camOrientation.x < -89.f)	m_camOrientation.x = -89.f;
+
+		prevMousePos = currMousePos;
 	}
-	if (m_InputCommands.rotLeft)
+	else if (!m_InputCommands.middleMouseDown)
 	{
-		m_camOrientation.y += m_camRotRate;
+		GetCursorPos(&prevMousePos);
 	}
 
+
 	//create look direction from Euler angles in m_camOrientation
-	m_camLookDirection.x = sin((m_camOrientation.y)*3.1415 / 180);
-	m_camLookDirection.z = cos((m_camOrientation.y)*3.1415 / 180);
+	m_camLookDirection.x = 0.5 * cos(m_camOrientation.y * 3.14159265f / 180.0f) * cos(m_camOrientation.x * 3.14159265f / 180.0f);
+	m_camLookDirection.y = 0.5 * sin(m_camOrientation.x * 3.14159265f / 180.0f);
+	m_camLookDirection.z = 0.5 * sin(m_camOrientation.y * 3.14159265f / 180.0f) * cos(m_camOrientation.x * 3.14159265f / 180.0f);
 	m_camLookDirection.Normalize();
 
 	//create right vector from look Direction
 	m_camLookDirection.Cross(Vector3::UnitY, m_camRight);
+	if (!doOnce)
+	{
+		m_camLookDirection.Cross(Vector3::UnitZ, m_camUp);
+		doOnce = true;
+	}
+	
 
 	//process input and update stuff
 	if (m_InputCommands.forward)
@@ -179,7 +207,15 @@ void Game::Update(DX::StepTimer const& timer)
 	{
 		m_camPosition -= m_camRight*m_movespeed;
 	}
-
+	if (m_InputCommands.up)
+	{
+		m_camPosition -= m_camUp*m_movespeed;
+	}
+	if (m_InputCommands.down)
+	{
+		m_camPosition += m_camUp * m_movespeed;
+	}
+	
 	//update lookat point
 	m_camLookAt = m_camPosition + m_camLookDirection;
 
@@ -610,4 +646,91 @@ std::wstring StringToWCHART(std::string s)
 	std::wstring r(buf);
 	delete[] buf;
 	return r;
+}
+
+std::vector<int> Game::MousePicking(bool multiSelect)
+{
+
+	int selected = -1;
+	float pickedDistance = 0;
+
+	//setup near and far planes of frustum with mouse X and mouse y passed down from Toolmain. 
+		//they may look the same but note, the difference in Z
+	const XMVECTOR nearSource = XMVectorSet(m_InputCommands.mouse_X, m_InputCommands.mouse_Y, 0.0f, 1.0f);
+	const XMVECTOR farSource = XMVectorSet(m_InputCommands.mouse_X, m_InputCommands.mouse_Y, 1.0f, 1.0f);
+
+	//Loop through entire display list of objects and pick with each in turn. 
+	for (int i = 0; i < m_displayList.size(); i++)
+	{
+		//Get the scale factor and translation of the object
+		const XMVECTORF32 scale = { m_displayList[i].m_scale.x,		m_displayList[i].m_scale.y,		m_displayList[i].m_scale.z };
+		const XMVECTORF32 translate = { m_displayList[i].m_position.x,		m_displayList[i].m_position.y,	m_displayList[i].m_position.z };
+
+		//convert euler angles into a quaternion for the rotation of the object
+		XMVECTOR rotate = Quaternion::CreateFromYawPitchRoll(m_displayList[i].m_orientation.y * 3.1415 / 180, m_displayList[i].m_orientation.x * 3.1415 / 180,
+			m_displayList[i].m_orientation.z * 3.1415 / 180);
+
+		//create set the matrix of the selected object in the world based on the translation, scale and rotation.
+		XMMATRIX local = m_world * XMMatrixTransformation(g_XMZero, Quaternion::Identity, scale, g_XMZero, rotate, translate);
+
+		//Unproject the points on the near and far plane, with respect to the matrix we just created.
+		XMVECTOR nearPoint = XMVector3Unproject(nearSource, 0.0f, 0.0f, m_ScreenDimensions.right, m_ScreenDimensions.bottom, m_deviceResources->GetScreenViewport().MinDepth, m_deviceResources->GetScreenViewport().MaxDepth, m_projection, m_view, local);
+
+		XMVECTOR farPoint = XMVector3Unproject(farSource, 0.0f, 0.0f, m_ScreenDimensions.right, m_ScreenDimensions.bottom, m_deviceResources->GetScreenViewport().MinDepth, m_deviceResources->GetScreenViewport().MaxDepth, m_projection, m_view, local);
+
+		//turn the transformed points into our picking vector. 
+		XMVECTOR pickingVector = farPoint - nearPoint;
+		pickingVector = XMVector3Normalize(pickingVector);
+
+		float closestDist = FLT_MAX;
+	
+		//loop through mesh list for object
+		for (int y = 0; y < m_displayList[i].m_model.get()->meshes.size(); y++)
+		{
+
+			//checking for ray intersection
+			if (m_displayList[i].m_model.get()->meshes[y]->boundingBox.Intersects(nearPoint, pickingVector, pickedDistance))
+			{
+				if (pickedDistance < closestDist)
+				{
+					closestDist = pickedDistance;
+					selected = i;
+				}
+			}
+		}
+	}
+
+	if (selected != -1)
+	{
+		if (!selectedID.empty())
+			if (selectedID[0] == -1)
+			{
+				selectedID.clear();
+			}
+		if (multiSelect)
+		{
+			auto it = std::find(selectedID.begin(), selectedID.end(), selected);
+			if (it == selectedID.end())
+				selectedID.push_back(selected);
+			else if (it != selectedID.end())
+				selectedID.erase(it);
+			else
+				selectedID.clear();
+		}
+		else 
+		{
+			selectedID.clear();
+			selectedID.push_back(selected);
+		}
+		
+	}
+	else
+	{
+		selectedID.clear();
+		selectedID.push_back(-1);
+	}
+
+	//if we got a hit.  return it.  
+	return selectedID;
+
 }
