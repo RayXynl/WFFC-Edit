@@ -1,0 +1,30 @@
+﻿  ToolMain.cpp
+  _WIN32_WINNT not defined. Defaulting to _WIN32_WINNT_MAXVER (see WinSDKVer.h)
+D:\CMP405\WFFC-Edit\WOFFCEdit\ToolMain.cpp(99,46): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\CMP405\WFFC-Edit\WOFFCEdit\ToolMain.cpp(100,46): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\CMP405\WFFC-Edit\WOFFCEdit\ToolMain.cpp(101,46): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\CMP405\WFFC-Edit\WOFFCEdit\ToolMain.cpp(102,46): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\CMP405\WFFC-Edit\WOFFCEdit\ToolMain.cpp(103,46): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\CMP405\WFFC-Edit\WOFFCEdit\ToolMain.cpp(104,46): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\CMP405\WFFC-Edit\WOFFCEdit\ToolMain.cpp(105,46): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\CMP405\WFFC-Edit\WOFFCEdit\ToolMain.cpp(106,46): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\CMP405\WFFC-Edit\WOFFCEdit\ToolMain.cpp(107,46): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\CMP405\WFFC-Edit\WOFFCEdit\ToolMain.cpp(119,48): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\CMP405\WFFC-Edit\WOFFCEdit\ToolMain.cpp(120,48): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\CMP405\WFFC-Edit\WOFFCEdit\ToolMain.cpp(121,48): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\CMP405\WFFC-Edit\WOFFCEdit\ToolMain.cpp(125,48): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\CMP405\WFFC-Edit\WOFFCEdit\ToolMain.cpp(126,47): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\CMP405\WFFC-Edit\WOFFCEdit\ToolMain.cpp(127,42): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+D:\CMP405\WFFC-Edit\WOFFCEdit\ToolMain.cpp(131,50): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+D:\CMP405\WFFC-Edit\WOFFCEdit\ToolMain.cpp(132,50): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+D:\CMP405\WFFC-Edit\WOFFCEdit\ToolMain.cpp(142,57): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\CMP405\WFFC-Edit\WOFFCEdit\ToolMain.cpp(143,57): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\CMP405\WFFC-Edit\WOFFCEdit\ToolMain.cpp(144,57): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\CMP405\WFFC-Edit\WOFFCEdit\ToolMain.cpp(145,58): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\CMP405\WFFC-Edit\WOFFCEdit\ToolMain.cpp(146,58): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\CMP405\WFFC-Edit\WOFFCEdit\ToolMain.cpp(147,58): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\CMP405\WFFC-Edit\WOFFCEdit\ToolMain.cpp(148,59): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\CMP405\WFFC-Edit\WOFFCEdit\ToolMain.cpp(149,56): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\CMP405\WFFC-Edit\WOFFCEdit\ToolMain.cpp(150,54): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\CMP405\WFFC-Edit\WOFFCEdit\ToolMain.cpp(151,57): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+  Win32SimpleSample.vcxproj -> D:\CMP405\WFFC-Edit\WOFFCEdit\Debug\WoFEdit.exe

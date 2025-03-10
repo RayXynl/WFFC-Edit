@@ -2,6 +2,7 @@
 #include "resource.h"
 #include <vector>
 #include <sstream>
+#include <iostream>
 
 //
 //ToolMain Class
@@ -9,16 +10,23 @@ ToolMain::ToolMain()
 {
 
 	m_currentChunk = 0;		//default value
-	m_selectedObject = 0;	//initial selection ID
+	//m_selectedObject = 0;	//initial selection ID
 	m_sceneGraph.clear();	//clear the vector for the scenegraph
 	m_databaseConnection = NULL;
 
 	//zero input commands
-	m_toolInputCommands.forward		= false;
-	m_toolInputCommands.back		= false;
-	m_toolInputCommands.left		= false;
-	m_toolInputCommands.right		= false;
-	
+	m_toolInputCommands.forward			= false;
+	m_toolInputCommands.back			= false;
+	m_toolInputCommands.left			= false;
+	m_toolInputCommands.right			= false;
+	m_toolInputCommands.mouse_Mid_Down = false;
+	m_toolInputCommands.mouse_LB_Down	= false;
+	m_toolInputCommands.mouse_X			= 0;
+	m_toolInputCommands.mouse_Y			= 0;
+
+	m_toolInputCommands.g_key_down = false;
+
+	m_toolInputCommands.editMode = CameraMove;
 }
 
 
@@ -28,7 +36,7 @@ ToolMain::~ToolMain()
 }
 
 
-int ToolMain::getCurrentSelectionID()
+std::vector<int> ToolMain::getCurrentSelectionID()
 {
 
 	return m_selectedObject;
@@ -287,13 +295,34 @@ void ToolMain::Tick(MSG *msg)
 		//add to scenegraph
 		//resend scenegraph to Direct X renderer
 
+	if (m_toolInputCommands.mouse_LB_Down)
+	{
+		m_selectedObject = m_d3dRenderer.MousePicking(m_toolInputCommands.ctrlDown);
+		m_toolInputCommands.mouse_LB_Down = false;
+	}
+
+	if (m_selectedObject.size() > 0 && m_toolInputCommands.editMode == ModelMove)
+	{
+		if (m_toolInputCommands.left || m_toolInputCommands.right || m_toolInputCommands.forward || m_toolInputCommands.back || m_toolInputCommands.up || m_toolInputCommands.down)
+		{
+			m_d3dRenderer.MoveObjects(m_selectedObject);
+		}
+	}
+
+	if (m_toolInputCommands.tabDown && !m_toolInputCommands.tabPrevState)
+	{
+		m_toolInputCommands.editMode++;
+		if (m_toolInputCommands.editMode > ModelScale) 	
+			m_toolInputCommands.editMode = CameraMove;
+	}
+	m_toolInputCommands.tabPrevState = m_toolInputCommands.tabDown;
+
 	//Renderer Update Call
 	m_d3dRenderer.Tick(&m_toolInputCommands);
 }
 
 void ToolMain::UpdateInput(MSG * msg)
 {
-
 	switch (msg->message)
 	{
 		//Global inputs,  mouse position and keys etc
@@ -306,48 +335,47 @@ void ToolMain::UpdateInput(MSG * msg)
 		break;
 
 	case WM_MOUSEMOVE:
+		m_toolInputCommands.mouse_X = GET_X_LPARAM(msg->lParam);
+		m_toolInputCommands.mouse_Y = GET_Y_LPARAM(msg->lParam);
 		break;
 
 	case WM_LBUTTONDOWN:	//mouse button down,  you will probably need to check when its up too
-		//set some flag for the mouse button in inputcommands
+		m_toolInputCommands.mouse_LB_Down = true;
 		break;
-
+	case WM_MBUTTONDOWN:
+		m_toolInputCommands.mouse_Mid_Down = true;
+		break;
+	case WM_MBUTTONUP:
+		m_toolInputCommands.mouse_Mid_Down = false;
+		break;
+	
 	}
 	//here we update all the actual app functionality that we want.  This information will either be used int toolmain, or sent down to the renderer (Camera movement etc
 	//WASD movement
-	if (m_keyArray['W'])
-	{
-		m_toolInputCommands.forward = true;
-	}
-	else m_toolInputCommands.forward = false;
+	if (m_keyArray['W'])	m_toolInputCommands.forward = true;
+	else					m_toolInputCommands.forward = false;
 	
-	if (m_keyArray['S'])
-	{
-		m_toolInputCommands.back = true;
-	}
-	else m_toolInputCommands.back = false;
-	if (m_keyArray['A'])
-	{
-		m_toolInputCommands.left = true;
-	}
-	else m_toolInputCommands.left = false;
+	if (m_keyArray['S'])	m_toolInputCommands.back = true;
+	else					m_toolInputCommands.back = false;
 
-	if (m_keyArray['D'])
-	{
-		m_toolInputCommands.right = true;
-	}
-	else m_toolInputCommands.right = false;
+	if (m_keyArray['A'])	m_toolInputCommands.left = true;
+	else					m_toolInputCommands.left = false;
+
+	if (m_keyArray['D'])	m_toolInputCommands.right = true;
+	else					m_toolInputCommands.right = false;
 	//rotation
-	if (m_keyArray['E'])
-	{
-		m_toolInputCommands.rotRight = true;
-	}
-	else m_toolInputCommands.rotRight = false;
-	if (m_keyArray['Q'])
-	{
-		m_toolInputCommands.rotLeft = true;
-	}
-	else m_toolInputCommands.rotLeft = false;
+	if (m_keyArray['E'])	m_toolInputCommands.up = true;
+	else					m_toolInputCommands.up = false;
 
-	//WASD
+	if (m_keyArray['Q'])	m_toolInputCommands.down = true;
+	else					m_toolInputCommands.down = false;
+
+	if (m_keyArray[VK_CONTROL]) m_toolInputCommands.ctrlDown = true;
+	else						m_toolInputCommands.ctrlDown = false;
+
+	if (m_keyArray[VK_TAB])		m_toolInputCommands.tabDown = true;
+	else						m_toolInputCommands.tabDown = false;
+
+
+
 }

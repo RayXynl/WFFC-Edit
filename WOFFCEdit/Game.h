@@ -11,6 +11,7 @@
 #include "DisplayChunk.h"
 #include "ChunkObject.h"
 #include "InputCommands.h"
+#include "Camera.h"
 #include <vector>
 
 
@@ -51,6 +52,8 @@ public:
 	void SaveDisplayChunk(ChunkObject *SceneChunk);	//saves geometry et al
 	void ClearDisplayList();
 
+	std::vector<int> MousePicking(bool multiSelect);
+	void MoveObjects(std::vector<int>& selectedIDs);
 #ifdef DXTK_AUDIO
 	void NewAudioDevice();
 #endif
@@ -64,21 +67,13 @@ private:
 
 	void XM_CALLCONV DrawGrid(DirectX::FXMVECTOR xAxis, DirectX::FXMVECTOR yAxis, DirectX::FXMVECTOR origin, size_t xdivs, size_t ydivs, DirectX::GXMVECTOR color);
 
+
 	//tool specific
 	std::vector<DisplayObject>			m_displayList;
 	DisplayChunk						m_displayChunk;
 	InputCommands						m_InputCommands;
-
+	Camera								m_Camera;
 	//functionality
-	float								m_movespeed;
-
-	//camera
-	DirectX::SimpleMath::Vector3		m_camPosition;
-	DirectX::SimpleMath::Vector3		m_camOrientation;
-	DirectX::SimpleMath::Vector3		m_camLookAt;
-	DirectX::SimpleMath::Vector3		m_camLookDirection;
-	DirectX::SimpleMath::Vector3		m_camRight;
-	float m_camRotRate;
 
 	//control variables
 	bool m_grid;							//grid rendering on / off
@@ -123,10 +118,15 @@ private:
 #endif
 
     DirectX::SimpleMath::Matrix                                             m_world;
-    DirectX::SimpleMath::Matrix                                             m_view;
+  // DirectX::SimpleMath::Matrix                                             m_view;
     DirectX::SimpleMath::Matrix                                             m_projection;
 
+	POINT prevMousePos;
+	POINT currMousePos;
 
+	RECT m_ScreenDimensions;
+
+	std::vector<int> selectedID;
 };
 
 std::wstring StringToWCHART(std::string s);
