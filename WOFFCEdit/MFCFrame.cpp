@@ -20,10 +20,10 @@ static UINT indicators[] =
 //frame initialiser
 CMyFrame::CMyFrame()
 {
-	m_selectionID = 999; //an obviously wrong selection ID,  to verify its working
+	m_selectionID.push_back(999); //an obviously wrong selection ID,  to verify its working
 }
 
-void CMyFrame::SetCurrentSelectionID(int ID)
+void CMyFrame::SetCurrentSelectionID(std::vector<int> ID)
 {
 	m_selectionID = ID;
 }

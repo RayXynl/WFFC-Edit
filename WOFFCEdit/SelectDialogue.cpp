@@ -61,28 +61,20 @@ void SelectDialogue::End()
 
 void SelectDialogue::Select()
 {
-	int index = m_listBox.GetCurSel();
+	int index = m_listBox.GetCurSel();  // Get the currently selected item index
 	CString currentSelectionValue;
-	
-	if (index > 0)
+
+	if (index >= 0)  // Check if something is selected
 	{
-		// Allocate an array of indices for the selected items
-		CArray<int, int> selectedIndices;
-		selectedIndices.SetSize(index);
+		// Get the text of the currently selected item
+		m_listBox.GetText(index, currentSelectionValue);
 
-		// Get the actual indices of selected items
-		m_listBox.GetSelItems(index, selectedIndices.GetData());
+		// Convert the selection (assumed to be an ID) to int
+		int selectedID = _ttoi(currentSelectionValue);
 
-		// Loop through each selected index and add it to the current selection
-		for (int i = 0; i < index; i++)
-		{
-			int index = selectedIndices[i];
-			m_listBox.GetText(index, currentSelectionValue);
-
-			// Add the selected ID to the vector (assuming the ID is stored in the list item)
-			int selectedID = _ttoi(currentSelectionValue);  // Convert to int (assuming the ID is a number in CString)
-			m_currentSelection->push_back(selectedID);      // Add to vector
-		}
+		// Clear the current selection vector and add the single selected ID
+		m_currentSelection->clear();  // Clear any existing selection
+		m_currentSelection->push_back(selectedID);  // Add the selected ID to the vector
 	}
 }
 

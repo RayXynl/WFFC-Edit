@@ -3,6 +3,7 @@
 #include <afxext.h>
 #include "MFCRenderFrame.h"
 #include "ToolMain.h"
+#include <vector>
 
 
 
@@ -20,12 +21,12 @@ public:
 
 public:
 	CMyFrame();
-	void SetCurrentSelectionID(int ID);
+	void SetCurrentSelectionID(std::vector<int> ID);
 	afx_msg void OnUpdatePage(CCmdUI *pCmdUI);
 
 
 private:	//overrides
-	int		m_selectionID;	//
+	std::vector<int>		m_selectionID;	//
 
 	//note the afx_message keyword is linking this method to message map access.
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);

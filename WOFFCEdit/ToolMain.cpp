@@ -19,7 +19,7 @@ ToolMain::ToolMain()
 	m_toolInputCommands.back			= false;
 	m_toolInputCommands.left			= false;
 	m_toolInputCommands.right			= false;
-	m_toolInputCommands.mouse_Mid_Down = false;
+	m_toolInputCommands.mouse_Mid_Down	= false;
 	m_toolInputCommands.mouse_LB_Down	= false;
 	m_toolInputCommands.mouse_X			= 0;
 	m_toolInputCommands.mouse_Y			= 0;
@@ -38,17 +38,16 @@ ToolMain::~ToolMain()
 
 std::vector<int> ToolMain::getCurrentSelectionID()
 {
-
 	return m_selectedObject;
 }
 
-void ToolMain::onActionInitialise(HWND handle, int width, int height)
+void ToolMain::onActionInitialise(HWND handle, int width, int height, ObjectManipulationDialog* objectDialogRef)
 {
 	//window size, handle etc for directX
 	m_width		= width;
 	m_height	= height;
-	
-	m_d3dRenderer.Initialize(handle, m_width, m_height);
+	m_ToolObjectManipDialog = objectDialogRef;
+	m_d3dRenderer.Initialize(handle, m_width, m_height, &m_displayList);
 
 	//database connection establish
 	int rc;
@@ -294,11 +293,25 @@ void ToolMain::Tick(MSG *msg)
 		//update Scenegraph
 		//add to scenegraph
 		//resend scenegraph to Direct X renderer
-
-	if (m_toolInputCommands.mouse_LB_Down)
+	CWnd* FocusedWnd = CWnd::GetFocus();
+	if (FocusedWnd)
 	{
-		m_selectedObject = m_d3dRenderer.MousePicking(m_toolInputCommands.ctrlDown);
-		m_toolInputCommands.mouse_LB_Down = false;
+		CString focusedWindowName;
+		FocusedWnd->GetWindowText(focusedWindowName);  
+
+		if (focusedWindowName.CompareNoCase(_T("World of Flim-Flam Craft Editor")) == 0)
+		{
+			if (m_toolInputCommands.mouse_LB_Down)
+			{
+				m_selectedObject = m_d3dRenderer.MousePicking(m_toolInputCommands.ctrlDown);
+				m_toolInputCommands.mouse_LB_Down = false;
+
+				if (IsWindow(m_ToolObjectManipDialog->GetSafeHwnd()))  // Ensure the window exists
+				{
+					m_ToolObjectManipDialog->SetObjectData(&m_displayList);
+				}
+			}
+		}
 	}
 
 	if (m_selectedObject.size() > 0 && m_toolInputCommands.editMode == ModelMove)

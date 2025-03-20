@@ -25,7 +25,7 @@ public:
 	~Game();
 
 	// Initialization and management
-	void Initialize(HWND window, int width, int height);
+	void Initialize(HWND window, int width, int height, std::vector<DisplayObject>* displayList);
 	void SetGridState(bool state);
 
 	// Basic game loop
@@ -54,9 +54,10 @@ public:
 
 	std::vector<int> MousePicking(bool multiSelect);
 	void MoveObjects(std::vector<int>& selectedIDs);
+	void Undo();
 #ifdef DXTK_AUDIO
 	void NewAudioDevice();
-#endif
+#endif  
 
 private:
 
@@ -69,7 +70,7 @@ private:
 
 
 	//tool specific
-	std::vector<DisplayObject>			m_displayList;
+	std::vector<DisplayObject>*			m_displayList;
 	DisplayChunk						m_displayChunk;
 	InputCommands						m_InputCommands;
 	Camera								m_Camera;

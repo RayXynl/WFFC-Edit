@@ -19,7 +19,7 @@ Game::Game()
 {
     m_deviceResources = std::make_unique<DX::DeviceResources>();
     m_deviceResources->RegisterDeviceNotify(this);
-	m_displayList.clear();
+	//m_displayList->clear();
 	
 	//initial Settings
 	//modes
@@ -41,8 +41,9 @@ Game::~Game()
 }
 
 // Initialize the Direct3D resources required to run.
-void Game::Initialize(HWND window, int width, int height)
+void Game::Initialize(HWND window, int width, int height, std::vector<DisplayObject>* displayList)
 {
+	m_displayList = displayList;
     m_gamePad = std::make_unique<GamePad>();
 
     m_keyboard = std::make_unique<Keyboard>();
@@ -183,21 +184,21 @@ void Game::Render()
 	m_sprites->End();
 
 	//RENDER OBJECTS FROM SCENEGRAPH
-	int numRenderObjects = m_displayList.size();
+	int numRenderObjects = m_displayList->size();
 	for (int i = 0; i < numRenderObjects; i++)
 	{
 		m_deviceResources->PIXBeginEvent(L"Draw model");
-		const XMVECTORF32 scale = { m_displayList[i].m_scale.x, m_displayList[i].m_scale.y, m_displayList[i].m_scale.z };
-		const XMVECTORF32 translate = { m_displayList[i].m_position.x, m_displayList[i].m_position.y, m_displayList[i].m_position.z };
+		const XMVECTORF32 scale = { m_displayList->at(i).m_scale.x, m_displayList->at(i).m_scale.y, m_displayList->at(i).m_scale.z };
+		const XMVECTORF32 translate = { m_displayList->at(i).m_position.x, m_displayList->at(i).m_position.y, m_displayList->at(i).m_position.z };
 
 		//convert degrees into radians for rotation matrix
-		XMVECTOR rotate = Quaternion::CreateFromYawPitchRoll(m_displayList[i].m_orientation.y *3.1415 / 180,
-															m_displayList[i].m_orientation.x *3.1415 / 180,
-															m_displayList[i].m_orientation.z *3.1415 / 180);
+		XMVECTOR rotate = Quaternion::CreateFromYawPitchRoll(m_displayList->at(i).m_orientation.y *3.1415 / 180,
+															m_displayList->at(i).m_orientation.x *3.1415 / 180,
+															m_displayList->at(i).m_orientation.z *3.1415 / 180);
 
 		XMMATRIX local = m_world * XMMatrixTransformation(g_XMZero, Quaternion::Identity, scale, g_XMZero, rotate, translate);
 
-		m_displayList[i].m_model->Draw(context, *m_states, local, m_Camera.GetViewMatrix(), m_projection, false);	//last variable in draw,  make TRUE for wireframe
+		m_displayList->at(i).m_model->Draw(context, *m_states, local, m_Camera.GetViewMatrix(), m_projection, false);	//last variable in draw,  make TRUE for wireframe
 
 		m_deviceResources->PIXEndEvent();
 	}
@@ -323,9 +324,9 @@ void Game::BuildDisplayList(std::vector<SceneObject> * SceneGraph)
 	auto device = m_deviceResources->GetD3DDevice();
 	auto devicecontext = m_deviceResources->GetD3DDeviceContext();
 
-	if (!m_displayList.empty())		//is the vector empty
+	if (!m_displayList->empty())		//is the vector empty
 	{
-		m_displayList.clear();		//if not, empty it
+		m_displayList->clear();		//if not, empty it
 	}
 
 	//for every item in the scenegraph
@@ -392,7 +393,7 @@ void Game::BuildDisplayList(std::vector<SceneObject> * SceneGraph)
 		newDisplayObject.m_light_linear		= SceneGraph->at(i).light_linear;
 		newDisplayObject.m_light_quadratic	= SceneGraph->at(i).light_quadratic;
 		
-		m_displayList.push_back(newDisplayObject);
+		m_displayList->push_back(newDisplayObject);
 		
 	}
 		
@@ -555,15 +556,15 @@ std::vector<int> Game::MousePicking(bool multiSelect)
 	const XMVECTOR farSource = XMVectorSet(m_InputCommands.mouse_X, m_InputCommands.mouse_Y, 1.0f, 1.0f);
 
 	//Loop through entire display list of objects and pick with each in turn. 
-	for (int i = 0; i < m_displayList.size(); i++)
+	for (int i = 0; i < m_displayList->size(); i++)
 	{
 		//Get the scale factor and translation of the object
-		const XMVECTORF32 scale = { m_displayList[i].m_scale.x,		m_displayList[i].m_scale.y,		m_displayList[i].m_scale.z };
-		const XMVECTORF32 translate = { m_displayList[i].m_position.x,		m_displayList[i].m_position.y,	m_displayList[i].m_position.z };
+		const XMVECTORF32 scale = { m_displayList->at(i).m_scale.x,		m_displayList->at(i).m_scale.y,		m_displayList->at(i).m_scale.z };
+		const XMVECTORF32 translate = { m_displayList->at(i).m_position.x,		m_displayList->at(i).m_position.y,	m_displayList->at(i).m_position.z };
 
 		//convert euler angles into a quaternion for the rotation of the object
-		XMVECTOR rotate = Quaternion::CreateFromYawPitchRoll(m_displayList[i].m_orientation.y * 3.1415 / 180, m_displayList[i].m_orientation.x * 3.1415 / 180,
-			m_displayList[i].m_orientation.z * 3.1415 / 180);
+		XMVECTOR rotate = Quaternion::CreateFromYawPitchRoll(m_displayList->at(i).m_orientation.y * 3.1415 / 180, m_displayList->at(i).m_orientation.x * 3.1415 / 180,
+			m_displayList->at(i).m_orientation.z * 3.1415 / 180);
 
 		//create set the matrix of the selected object in the world based on the translation, scale and rotation.
 		XMMATRIX local = m_world * XMMatrixTransformation(g_XMZero, Quaternion::Identity, scale, g_XMZero, rotate, translate);
@@ -580,11 +581,11 @@ std::vector<int> Game::MousePicking(bool multiSelect)
 		float closestDist = FLT_MAX;
 	
 		//loop through mesh list for object
-		for (int y = 0; y < m_displayList[i].m_model.get()->meshes.size(); y++)
+		for (int y = 0; y < m_displayList->at(i).m_model.get()->meshes.size(); y++)
 		{
 
 			//checking for ray intersection
-			if (m_displayList[i].m_model.get()->meshes[y]->boundingBox.Intersects(nearPoint, pickingVector, pickedDistance))
+			if (m_displayList->at(i).m_model.get()->meshes[y]->boundingBox.Intersects(nearPoint, pickingVector, pickedDistance))
 			{
 				if (pickedDistance < closestDist)
 				{
@@ -593,16 +594,17 @@ std::vector<int> Game::MousePicking(bool multiSelect)
 				}
 			}
 		}
-		
 	}
 
 	if (selected != -1)
 	{
 		if (!selectedID.empty())
+		{
 			if (selectedID[0] == -1)
 			{
 				selectedID.clear();
 			}
+		}
 		if (multiSelect)
 		{
 			auto it = std::find(selectedID.begin(), selectedID.end(), selected);
@@ -627,7 +629,6 @@ std::vector<int> Game::MousePicking(bool multiSelect)
 
 	//if we got a hit.  return it.  
 	return selectedID;
-
 }
 
 void Game::MoveObjects(std::vector<int>& selectedIDs)
@@ -635,16 +636,19 @@ void Game::MoveObjects(std::vector<int>& selectedIDs)
 	if (selectedIDs.empty())
 		return;
 
-	if (m_displayList.empty())
+	if (selectedIDs[0] <= -1)
+		return;
+
+	if (m_displayList->empty())
 		return;
 
 	for (int i = 0; i < selectedIDs.size(); i++)
 	{
-		if (m_InputCommands.forward)	m_displayList[selectedIDs[i]].m_position.z += 0.1f;
-		if (m_InputCommands.back)		m_displayList[selectedIDs[i]].m_position.z -= 0.1f;
-		if (m_InputCommands.left)		m_displayList[selectedIDs[i]].m_position.x += 0.1f;
-		if (m_InputCommands.right)		m_displayList[selectedIDs[i]].m_position.x -= 0.1f;
-		if (m_InputCommands.up)			m_displayList[selectedIDs[i]].m_position.y += 0.1f;
-		if (m_InputCommands.down)		m_displayList[selectedIDs[i]].m_position.y -= 0.1f;
+		if (m_InputCommands.forward)	m_displayList->at(selectedIDs[i]).m_position.z += 0.1f;
+		if (m_InputCommands.back)		m_displayList->at(selectedIDs[i]).m_position.z -= 0.1f;
+		if (m_InputCommands.left)		m_displayList->at(selectedIDs[i]).m_position.x += 0.1f;
+		if (m_InputCommands.right)		m_displayList->at(selectedIDs[i]).m_position.x -= 0.1f;
+		if (m_InputCommands.up)			m_displayList->at(selectedIDs[i]).m_position.y += 0.1f;
+		if (m_InputCommands.down)		m_displayList->at(selectedIDs[i]).m_position.y -= 0.1f;
 	}
 }

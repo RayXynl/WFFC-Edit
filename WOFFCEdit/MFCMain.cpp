@@ -1,12 +1,13 @@
 #include "MFCMain.h"
 #include "resource.h"
-
+#include "DisplayObject.h"
 
 BEGIN_MESSAGE_MAP(MFCMain, CWinApp)
 	ON_COMMAND(ID_FILE_QUIT,	&MFCMain::MenuFileQuit)
 	ON_COMMAND(ID_FILE_SAVETERRAIN, &MFCMain::MenuFileSaveTerrain)
 	ON_COMMAND(ID_EDIT_SELECT, &MFCMain::MenuEditSelect)
 	ON_COMMAND(ID_BUTTON40001,	&MFCMain::ToolBarButton1)
+	ON_COMMAND(ID_BUTTON40010,	&MFCMain::ToolBarButton2)
 	ON_UPDATE_COMMAND_UI(ID_INDICATOR_TOOL, &CMyFrame::OnUpdatePage)
 END_MESSAGE_MAP()
 
@@ -37,7 +38,7 @@ BOOL MFCMain::InitInstance()
 	m_width		= WindowRECT.Width();
 	m_height	= WindowRECT.Height();
 
-	m_ToolSystem.onActionInitialise(m_toolHandle, m_width, m_height);
+	m_ToolSystem.onActionInitialise(m_toolHandle, m_width, m_height, &m_ToolObjectManipDialog);
 
 	return TRUE;
 }
@@ -112,6 +113,14 @@ void MFCMain::ToolBarButton1()
 	
 	m_ToolSystem.onActionSave();
 }
+
+void MFCMain::ToolBarButton2()
+{
+	m_ToolObjectManipDialog.Create(IDD_ObjManip);
+	m_ToolObjectManipDialog.ShowWindow(SW_SHOW);
+	m_ToolObjectManipDialog.SetObjectData(&m_ToolSystem.m_sceneGraph, &m_ToolSystem.m_selectedObject, &m_ToolSystem.m_displayList);
+}
+
 
 
 MFCMain::MFCMain()
