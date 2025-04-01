@@ -201,6 +201,7 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="StepTimer.h" />
     <ClInclude Include="MFCMain.h" />
+    <ClInclude Include="Structures.h" />
     <ClInclude Include="ToolMain.h" />
   </ItemGroup>
   <ItemGroup>

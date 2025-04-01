@@ -38,7 +38,7 @@ BOOL MFCMain::InitInstance()
 	m_width		= WindowRECT.Width();
 	m_height	= WindowRECT.Height();
 
-	m_ToolSystem.onActionInitialise(m_toolHandle, m_width, m_height, &m_ToolObjectManipDialog);
+	m_ToolSystem.onActionInitialise(m_toolHandle, m_width, m_height, &m_ToolObjectManipDialog, &m_toolInputCommands);
 
 	return TRUE;
 }
@@ -109,8 +109,7 @@ void MFCMain::MenuEditSelect()
 }
 
 void MFCMain::ToolBarButton1()
-{
-	
+{	
 	m_ToolSystem.onActionSave();
 }
 
@@ -118,7 +117,7 @@ void MFCMain::ToolBarButton2()
 {
 	m_ToolObjectManipDialog.Create(IDD_ObjManip);
 	m_ToolObjectManipDialog.ShowWindow(SW_SHOW);
-	m_ToolObjectManipDialog.SetObjectData(&m_ToolSystem.m_sceneGraph, &m_ToolSystem.m_selectedObject, &m_ToolSystem.m_displayList);
+	m_ToolObjectManipDialog.SetObjectData(&m_ToolSystem.m_sceneGraph, &m_ToolSystem.m_selectedObject, &m_ToolSystem.m_displayList, &m_toolInputCommands);
 }
 
 

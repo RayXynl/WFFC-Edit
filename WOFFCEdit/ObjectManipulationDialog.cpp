@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "ObjectManipulationDialog.h"
+#include <algorithm>
 
 IMPLEMENT_DYNAMIC(ObjectManipulationDialog, CDialogEx)
 
@@ -15,6 +16,9 @@ BEGIN_MESSAGE_MAP(ObjectManipulationDialog, CDialogEx)
 	ON_EN_CHANGE(IDC_SCALE_X, &ObjectManipulationDialog::OnEnChangeScaleX)
 	ON_EN_CHANGE(IDC_SCALE_Y, &ObjectManipulationDialog::OnEnChangeScaleY)
 	ON_EN_CHANGE(IDC_SCALE_Z, &ObjectManipulationDialog::OnEnChangeScaleZ)
+	ON_BN_CLICKED(IDC_FreeMoveLoc, &ObjectManipulationDialog::OnBnClickedFreemoveloc)
+	ON_BN_CLICKED(IDC_FreeMoveRot, &ObjectManipulationDialog::OnBnClickedFreemoverot)
+	ON_BN_CLICKED(IDC_FreeMoveScale, &ObjectManipulationDialog::OnBnClickedFreemovescale)
 END_MESSAGE_MAP()
 
 
@@ -33,11 +37,12 @@ ObjectManipulationDialog::~ObjectManipulationDialog()
 {
 }
 
-void ObjectManipulationDialog::SetObjectData(std::vector<SceneObject>* SceneGraph, std::vector<int>* selection, std::vector<DisplayObject>*	displayList)
+void ObjectManipulationDialog::SetObjectData(std::vector<SceneObject>* SceneGraph, std::vector<int>* selection, std::vector<DisplayObject>*	displayList, InputCommands* inputCommands)
 {
 	m_sceneGraph = SceneGraph;
 	m_currentSelection = selection;
 	m_displayList = displayList;
+	m_toolInputCommands = inputCommands;
 }
 
 void ObjectManipulationDialog::SetObjectData(std::vector<DisplayObject>* displaylist)
@@ -72,9 +77,9 @@ void ObjectManipulationDialog::SetObjectData(std::vector<DisplayObject>* display
 		m_editY.SetWindowText(m_Ypos);
 		m_editZ.SetWindowText(m_Zpos);
 
-		m_RotX.SetWindowText(m_Xpos);
-		m_RotY.SetWindowText(m_Ypos);
-		m_RotZ.SetWindowText(m_Zpos);
+		m_RotX.SetWindowText(m_Xrot);
+		m_RotY.SetWindowText(m_Yrot);
+		m_RotZ.SetWindowText(m_Zrot);
 
 		m_ScaleX.SetWindowText(m_Xscale);
 		m_ScaleY.SetWindowText(m_Yscale);
@@ -110,6 +115,13 @@ void ObjectManipulationDialog::SetObjectData(std::vector<DisplayObject>* display
 	m_onNewSelection = false;
 }
 
+void ObjectManipulationDialog::SetStacks(std::stack<DObjectState>* undoStack, std::stack<DObjectState>* redoStack)
+{
+	m_undoStack = undoStack;
+	m_redoStack = redoStack;
+
+}
+
 void ObjectManipulationDialog::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
@@ -128,16 +140,55 @@ void ObjectManipulationDialog::DoDataExchange(CDataExchange* pDX)
 
 void ObjectManipulationDialog::End()
 {
+	m_toolInputCommands->editMode = CameraMove;
 	DestroyWindow();
+}
+
+void ObjectManipulationDialog::PushUndo(DisplayObject& object)
+{
+	DObjectState undoState(&object, XMFLOAT3(object.m_position), XMFLOAT3(object.m_orientation), XMFLOAT3(object.m_scale));
+	m_undoStack->push(undoState);
+}
+
+void ObjectManipulationDialog::ApplyObjectChange(float value, TransformType transform)
+{
+	if (m_onNewSelection)
+		return;
+
+	if (m_currentSelection->empty())
+		return;
+
+	for (int i = 0; i < m_currentSelection->size(); i++)
+	{
+		if (m_currentSelection->at(i) == -1)
+			continue;
+
+		DisplayObject& object = m_displayList->at(m_currentSelection->at(i));
+
+		PushUndo(object);
+
+		switch (transform)
+		{
+			case TransformType::PositionX:	object.m_position.x		= value; break;
+			case TransformType::PositionY:	object.m_position.y		= value; break;
+			case TransformType::PositionZ:	object.m_position.z		= value; break;
+			case TransformType::RotationX:	object.m_orientation.x	= value; break;
+			case TransformType::RotationY:	object.m_orientation.y	= value; break;
+			case TransformType::RotationZ:	object.m_orientation.z	= value; break;
+			case TransformType::ScaleX:		object.m_scale.x		= value; break;
+			case TransformType::ScaleY:		object.m_scale.y		= value; break;
+			case TransformType::ScaleZ:		object.m_scale.z		= value; break;
+		}
+
+		PushUndo(object);
+	}
 }
 
 BOOL ObjectManipulationDialog::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
-
 	return TRUE;
 }
-
 
 void ObjectManipulationDialog::PostNcDestroy()
 {
@@ -145,33 +196,21 @@ void ObjectManipulationDialog::PostNcDestroy()
 
 void ObjectManipulationDialog::OnBnClickedOk()
 {
+	m_toolInputCommands->editMode = CameraMove;
 	CDialogEx::OnOK();
 }
-
 
 void ObjectManipulationDialog::OnEnChangeEditX()
 {
 	if (m_onNewSelection)
 		return;
 
-	CString strX;
-	m_editX.GetWindowText(strX);
-	float newX = _ttof(strX); 
+	CString propertyChange;
+	m_editX.GetWindowText(propertyChange);
+	float newX = _ttof(propertyChange);
 
-	if (m_currentSelection->size() == 1 && m_currentSelection->front() != -1)
-	{
-		m_displayList->at(m_currentSelection->front()).m_position.x = newX;
-
-	}
-	else if (m_currentSelection->size() > 1)
-	{
-		for (int i = 0; i < m_currentSelection->size(); i++)
-		{
-			m_displayList->at(m_currentSelection->at(i)).m_position.x = newX;
-		}
-	}
+	ApplyObjectChange(newX, PositionX);
 }
-
 
 void ObjectManipulationDialog::OnEnChangeEditY()
 {
@@ -182,20 +221,8 @@ void ObjectManipulationDialog::OnEnChangeEditY()
 	m_editX.GetWindowText(strY);
 	float newY = _ttof(strY); 
 
-	if (m_currentSelection->size() == 1 && m_currentSelection->front() != -1)
-	{
-		m_displayList->at(m_currentSelection->front()).m_position.y += newY;
-
-	}
-	else if (m_currentSelection->size() > 1)
-	{
-		for (int i = 0; i < m_currentSelection->size(); i++)
-		{
-			m_displayList->at(m_currentSelection->at(i)).m_position.y = newY;
-		}
-	}
+	ApplyObjectChange(newY, PositionY);
 }
-
 
 void ObjectManipulationDialog::OnEnChangeEditZ()
 {
@@ -206,20 +233,8 @@ void ObjectManipulationDialog::OnEnChangeEditZ()
 	m_editX.GetWindowText(strZ);
 	float newZ = _ttof(strZ);
 
-	if (m_currentSelection->size() == 1 && m_currentSelection->front() != -1)
-	{
-		m_displayList->at(m_currentSelection->front()).m_position.z = newZ;
-
-	}
-	else if (m_currentSelection->size() > 1)
-	{
-		for (int i = 0; i < m_currentSelection->size(); i++)
-		{
-			m_displayList->at(m_currentSelection->at(i)).m_position.z = newZ;
-		}
-	}
+	ApplyObjectChange(newZ, PositionZ);
 }
-
 
 void ObjectManipulationDialog::OnEnChangeRotX()
 {
@@ -230,20 +245,8 @@ void ObjectManipulationDialog::OnEnChangeRotX()
 	m_RotX.GetWindowText(zRotate);
 	float newRot = _ttof(zRotate);
 
-	if (m_currentSelection->size() == 1 && m_currentSelection->front() != -1)
-	{
-		m_displayList->at(m_currentSelection->front()).m_orientation.x = newRot;
-
-	}
-	else if (m_currentSelection->size() > 1)
-	{
-		for (int i = 0; i < m_currentSelection->size(); i++)
-		{
-			m_displayList->at(m_currentSelection->at(i)).m_orientation.x = newRot;
-		}
-	}
+	ApplyObjectChange(newRot, RotationX);
 }
-
 
 void ObjectManipulationDialog::OnEnChangeRotY()
 {
@@ -254,21 +257,8 @@ void ObjectManipulationDialog::OnEnChangeRotY()
 	m_RotY.GetWindowText(yRotate);
 	float newRot = _ttof(yRotate);
 
-	if (m_currentSelection->size() == 1 && m_currentSelection->front() != -1)
-	{
-		m_displayList->at(m_currentSelection->front()).m_orientation.y = newRot;
-
-	}
-	else if (m_currentSelection->size() > 1)
-	{
-		for (int i = 0; i < m_currentSelection->size(); i++)
-		{
-			m_displayList->at(m_currentSelection->at(i)).m_orientation.y = newRot;
-		}
-	}
+	ApplyObjectChange(newRot, RotationY);
 }
-
-
 
 void ObjectManipulationDialog::OnEnChangeRotZ()
 {
@@ -279,20 +269,8 @@ void ObjectManipulationDialog::OnEnChangeRotZ()
 	m_RotZ.GetWindowText(zRotate);
 	float newRot = _ttof(zRotate);
 
-	if (m_currentSelection->size() == 1 && m_currentSelection->front() != -1)
-	{
-		m_displayList->at(m_currentSelection->front()).m_orientation.z = newRot;
-
-	}
-	else if (m_currentSelection->size() > 1)
-	{
-		for (int i = 0; i < m_currentSelection->size(); i++)
-		{
-			m_displayList->at(m_currentSelection->at(i)).m_orientation.z = newRot;
-		}
-	}
+	ApplyObjectChange(newRot, RotationZ);
 }
-
 
 void ObjectManipulationDialog::OnEnChangeScaleX()
 {
@@ -303,20 +281,8 @@ void ObjectManipulationDialog::OnEnChangeScaleX()
 	m_ScaleX.GetWindowText(xScale);
 	float newScale = _ttof(xScale);
 
-	if (m_currentSelection->size() == 1 && m_currentSelection->front() != -1)
-	{
-		m_displayList->at(m_currentSelection->front()).m_scale.x = newScale;
-
-	}
-	else if (m_currentSelection->size() > 1)
-	{
-		for (int i = 0; i < m_currentSelection->size(); i++)
-		{
-			m_displayList->at(m_currentSelection->at(i)).m_scale.x = newScale;
-		}
-	}
+	ApplyObjectChange(newScale, ScaleX);
 }
-
 
 void ObjectManipulationDialog::OnEnChangeScaleY()
 {
@@ -327,20 +293,8 @@ void ObjectManipulationDialog::OnEnChangeScaleY()
 	m_ScaleY.GetWindowText(yScale);
 	float newScale = _ttof(yScale);
 
-	if (m_currentSelection->size() == 1 && m_currentSelection->front() != -1)
-	{
-		m_displayList->at(m_currentSelection->front()).m_scale.y = newScale;
-
-	}
-	else if (m_currentSelection->size() > 1)
-	{
-		for (int i = 0; i < m_currentSelection->size(); i++)
-		{
-			m_displayList->at(m_currentSelection->at(i)).m_scale.y = newScale;
-		}
-	}
+	ApplyObjectChange(newScale, ScaleY);
 }
-
 
 void ObjectManipulationDialog::OnEnChangeScaleZ()
 {
@@ -351,16 +305,29 @@ void ObjectManipulationDialog::OnEnChangeScaleZ()
 	m_ScaleZ.GetWindowText(zScale);
 	float newScale = _ttof(zScale);
 
-	if (m_currentSelection->size() == 1 && m_currentSelection->front() != -1)
-	{
-		m_displayList->at(m_currentSelection->front()).m_scale.z = newScale;
+	ApplyObjectChange(newScale, ScaleZ);
+}
 
-	}
-	else if (m_currentSelection->size() > 1)
-	{
-		for (int i = 0; i < m_currentSelection->size(); i++)
-		{
-			m_displayList->at(m_currentSelection->at(i)).m_scale.z = newScale;
-		}
-	}
+void ObjectManipulationDialog::OnBnClickedFreemoveloc()
+{
+	if (m_toolInputCommands->editMode == ModelMove)
+		m_toolInputCommands->editMode = CameraMove;
+	else
+		m_toolInputCommands->editMode = ModelMove;
+}
+
+void ObjectManipulationDialog::OnBnClickedFreemoverot()
+{
+	if (m_toolInputCommands->editMode == ModelRotate)
+		m_toolInputCommands->editMode = CameraMove;
+	else
+		m_toolInputCommands->editMode = ModelRotate;
+}
+
+void ObjectManipulationDialog::OnBnClickedFreemovescale()
+{
+	if (m_toolInputCommands->editMode == ModelScale)
+		m_toolInputCommands->editMode = CameraMove;
+	else
+		m_toolInputCommands->editMode = ModelScale;
 }

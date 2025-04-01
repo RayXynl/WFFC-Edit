@@ -12,7 +12,10 @@
 #include "ChunkObject.h"
 #include "InputCommands.h"
 #include "Camera.h"
+#include "Structures.h"
 #include <vector>
+#include <stack>
+
 
 
 // A basic game implementation that creates a D3D11 device and
@@ -25,7 +28,7 @@ public:
 	~Game();
 
 	// Initialization and management
-	void Initialize(HWND window, int width, int height, std::vector<DisplayObject>* displayList);
+	void Initialize(HWND window, int width, int height, std::vector<DisplayObject>* displayList, std::stack<DObjectState>* redoStack, std::stack<DObjectState>* undoStack);
 	void SetGridState(bool state);
 
 	// Basic game loop
@@ -54,7 +57,14 @@ public:
 
 	std::vector<int> MousePicking(bool multiSelect);
 	void MoveObjects(std::vector<int>& selectedIDs);
-	void Undo();
+	void RotateObjects(std::vector<int>& selectedIDs);
+	void ScaleObjects(std::vector<int>& selectedIDs);
+	void Undo(std::stack<DObjectState>* undoStack, std::stack<DObjectState>* redoStack);
+	void Redo(std::stack<DObjectState>* redoStack, std::stack<DObjectState>* undoStack);
+	void Copy(std::vector<int>& selectedIDs, std::vector<SceneObject>& copiedObjects, std::vector<SceneObject>& m_sceneGraph);
+	void Paste(std::vector<SceneObject>& copiedObjects, std::vector<SceneObject>& m_sceneGraph);
+	void Delete(std::vector<int>& selectedIDs, std::vector<SceneObject>& m_sceneGraph);
+
 #ifdef DXTK_AUDIO
 	void NewAudioDevice();
 #endif  
@@ -74,7 +84,10 @@ private:
 	DisplayChunk						m_displayChunk;
 	InputCommands						m_InputCommands;
 	Camera								m_Camera;
+
 	//functionality
+	std::stack<DObjectState>*			m_redoStack;
+	std::stack<DObjectState>*			m_undoStack;
 
 	//control variables
 	bool m_grid;							//grid rendering on / off

@@ -13,20 +13,6 @@ ToolMain::ToolMain()
 	//m_selectedObject = 0;	//initial selection ID
 	m_sceneGraph.clear();	//clear the vector for the scenegraph
 	m_databaseConnection = NULL;
-
-	//zero input commands
-	m_toolInputCommands.forward			= false;
-	m_toolInputCommands.back			= false;
-	m_toolInputCommands.left			= false;
-	m_toolInputCommands.right			= false;
-	m_toolInputCommands.mouse_Mid_Down	= false;
-	m_toolInputCommands.mouse_LB_Down	= false;
-	m_toolInputCommands.mouse_X			= 0;
-	m_toolInputCommands.mouse_Y			= 0;
-
-	m_toolInputCommands.g_key_down = false;
-
-	m_toolInputCommands.editMode = CameraMove;
 }
 
 
@@ -41,13 +27,14 @@ std::vector<int> ToolMain::getCurrentSelectionID()
 	return m_selectedObject;
 }
 
-void ToolMain::onActionInitialise(HWND handle, int width, int height, ObjectManipulationDialog* objectDialogRef)
+void ToolMain::onActionInitialise(HWND handle, int width, int height, ObjectManipulationDialog* objectDialogRef, InputCommands* toolInputCommands)
 {
 	//window size, handle etc for directX
 	m_width		= width;
 	m_height	= height;
 	m_ToolObjectManipDialog = objectDialogRef;
-	m_d3dRenderer.Initialize(handle, m_width, m_height, &m_displayList);
+	m_toolInputCommands = toolInputCommands;
+	m_d3dRenderer.Initialize(handle, m_width, m_height, &m_displayList, &m_redoStack, &m_undoStack);
 
 	//database connection establish
 	int rc;
@@ -62,6 +49,23 @@ void ToolMain::onActionInitialise(HWND handle, int width, int height, ObjectMani
 	{
 		TRACE("Opened database successfully");
 	}
+
+	//zero input commands
+	m_toolInputCommands->forward = false;
+	m_toolInputCommands->back = false;
+	m_toolInputCommands->left = false;
+	m_toolInputCommands->right = false;
+	m_toolInputCommands->mouse_Mid_Down = false;
+	m_toolInputCommands->mouse_LB_Down = false;
+	m_toolInputCommands->mouse_X = 0;
+	m_toolInputCommands->mouse_Y = 0;
+
+	m_toolInputCommands->g_key_down = false;
+
+	m_toolInputCommands->undoDown = false;
+	m_toolInputCommands->undoDownPrevState = false;
+
+	m_toolInputCommands->editMode = CameraMove;
 
 	onActionLoad();
 }
@@ -187,7 +191,6 @@ void ToolMain::onActionLoad()
 	m_d3dRenderer.BuildDisplayList(&m_sceneGraph);
 	//build the renderable chunk 
 	m_d3dRenderer.BuildDisplayChunk(&m_chunk);
-
 }
 
 void ToolMain::onActionSave()
@@ -301,37 +304,105 @@ void ToolMain::Tick(MSG *msg)
 
 		if (focusedWindowName.CompareNoCase(_T("World of Flim-Flam Craft Editor")) == 0)
 		{
-			if (m_toolInputCommands.mouse_LB_Down)
+			if (m_toolInputCommands->mouse_LB_Down)
 			{
-				m_selectedObject = m_d3dRenderer.MousePicking(m_toolInputCommands.ctrlDown);
-				m_toolInputCommands.mouse_LB_Down = false;
-
+				m_selectedObject = m_d3dRenderer.MousePicking(m_toolInputCommands->ctrlDown);
+				m_toolInputCommands->mouse_LB_Down = false;
 				if (IsWindow(m_ToolObjectManipDialog->GetSafeHwnd()))  // Ensure the window exists
 				{
 					m_ToolObjectManipDialog->SetObjectData(&m_displayList);
+					m_ToolObjectManipDialog->SetStacks(&m_undoStack, &m_redoStack);
 				}
 			}
 		}
 	}
 
-	if (m_selectedObject.size() > 0 && m_toolInputCommands.editMode == ModelMove)
+	if (m_selectedObject.size() > 0)
 	{
-		if (m_toolInputCommands.left || m_toolInputCommands.right || m_toolInputCommands.forward || m_toolInputCommands.back || m_toolInputCommands.up || m_toolInputCommands.down)
+		if (m_toolInputCommands->left || m_toolInputCommands->right || m_toolInputCommands->forward || m_toolInputCommands->back || m_toolInputCommands->up || m_toolInputCommands->down)
 		{
-			m_d3dRenderer.MoveObjects(m_selectedObject);
+			if (!m_objManipHeld)
+			{
+				for (int i = 0; i < m_selectedObject.size(); i++)
+				{
+					if (m_selectedObject[i] == -1)
+						break;
+
+					DisplayObject& object = m_displayList[m_selectedObject[i]];
+					DObjectState undoState(&object, XMFLOAT3(object.m_position), XMFLOAT3(object.m_orientation), XMFLOAT3(object.m_scale));
+					m_undoStack.push(undoState);
+				}
+				m_objManipHeld = true;
+			}
+
+			if (m_toolInputCommands->editMode == ModelMove)
+				m_d3dRenderer.MoveObjects(m_selectedObject);
+			if (m_toolInputCommands->editMode == ModelRotate)
+				m_d3dRenderer.RotateObjects(m_selectedObject);
+			if (m_toolInputCommands->editMode == ModelScale)
+				m_d3dRenderer.ScaleObjects(m_selectedObject);
+		}
+		else if (m_objManipHeld)
+		{
+			for (int i = 0; i < m_selectedObject.size(); i++)
+			{
+				if (m_selectedObject[i] == -1)
+					break;
+
+				DisplayObject& object = m_displayList[m_selectedObject[i]];
+				DObjectState undoState(&object, XMFLOAT3(object.m_position), XMFLOAT3(object.m_orientation), XMFLOAT3(object.m_scale));
+				m_undoStack.push(undoState);
+			}
+			m_objManipHeld = false;
+		}
+	}
+	
+
+	if (m_toolInputCommands->undoDown && !m_toolInputCommands->undoDownPrevState)
+	{
+		m_d3dRenderer.Undo(&m_undoStack, &m_redoStack);
+		m_ToolObjectManipDialog->SetStacks(&m_undoStack, &m_redoStack);
+	}
+		m_toolInputCommands->undoDownPrevState = m_toolInputCommands->undoDown;
+
+	if (m_toolInputCommands->redoDown && !m_toolInputCommands->redoDownPrevState)
+	{
+		m_d3dRenderer.Redo(&m_redoStack, &m_undoStack);
+		m_ToolObjectManipDialog->SetStacks(&m_undoStack, &m_redoStack);
+	}
+		m_toolInputCommands->redoDownPrevState = m_toolInputCommands->redoDown;
+
+
+	if (m_toolInputCommands->c_key_down && !m_toolInputCommands->c_key_prev)
+	{
+		m_d3dRenderer.Copy(m_selectedObject, m_copyList, m_sceneGraph);
+	}
+		m_toolInputCommands->c_key_prev = m_toolInputCommands->c_key_down;
+
+	if (m_toolInputCommands->v_key_down && !m_toolInputCommands->v_key_prev)
+	{
+		m_d3dRenderer.Paste(m_copyList, m_sceneGraph);
+	}
+		m_toolInputCommands->v_key_prev = m_toolInputCommands->v_key_down;
+
+
+	if (m_toolInputCommands->deleteDown)
+	{
+		m_d3dRenderer.Delete(m_selectedObject, m_sceneGraph);
+	}
+	if (IsWindow(m_ToolObjectManipDialog->GetSafeHwnd()))  // Ensure the window exists
+	{
+		if (m_toolInputCommands->editMode == ModelMove || 
+			m_toolInputCommands->editMode == ModelRotate ||
+			m_toolInputCommands->editMode == ModelScale)
+		{
+			m_ToolObjectManipDialog->SetObjectData(&m_displayList);
 		}
 	}
 
-	if (m_toolInputCommands.tabDown && !m_toolInputCommands.tabPrevState)
-	{
-		m_toolInputCommands.editMode++;
-		if (m_toolInputCommands.editMode > ModelScale) 	
-			m_toolInputCommands.editMode = CameraMove;
-	}
-	m_toolInputCommands.tabPrevState = m_toolInputCommands.tabDown;
 
 	//Renderer Update Call
-	m_d3dRenderer.Tick(&m_toolInputCommands);
+	m_d3dRenderer.Tick(m_toolInputCommands);
 }
 
 void ToolMain::UpdateInput(MSG * msg)
@@ -348,47 +419,63 @@ void ToolMain::UpdateInput(MSG * msg)
 		break;
 
 	case WM_MOUSEMOVE:
-		m_toolInputCommands.mouse_X = GET_X_LPARAM(msg->lParam);
-		m_toolInputCommands.mouse_Y = GET_Y_LPARAM(msg->lParam);
+		m_toolInputCommands->mouse_X = GET_X_LPARAM(msg->lParam);
+		m_toolInputCommands->mouse_Y = GET_Y_LPARAM(msg->lParam);
 		break;
 
 	case WM_LBUTTONDOWN:	//mouse button down,  you will probably need to check when its up too
-		m_toolInputCommands.mouse_LB_Down = true;
+		m_toolInputCommands->mouse_LB_Down = true;
 		break;
 	case WM_MBUTTONDOWN:
-		m_toolInputCommands.mouse_Mid_Down = true;
+		m_toolInputCommands->mouse_Mid_Down = true;
 		break;
 	case WM_MBUTTONUP:
-		m_toolInputCommands.mouse_Mid_Down = false;
+		m_toolInputCommands->mouse_Mid_Down = false;
 		break;
 	
 	}
 	//here we update all the actual app functionality that we want.  This information will either be used int toolmain, or sent down to the renderer (Camera movement etc
 	//WASD movement
-	if (m_keyArray['W'])	m_toolInputCommands.forward = true;
-	else					m_toolInputCommands.forward = false;
+	if (m_keyArray['W'])	m_toolInputCommands->forward = true;
+	else					m_toolInputCommands->forward = false;
 	
-	if (m_keyArray['S'])	m_toolInputCommands.back = true;
-	else					m_toolInputCommands.back = false;
+	if (m_keyArray['S'])	m_toolInputCommands->back = true;
+	else					m_toolInputCommands->back = false;
 
-	if (m_keyArray['A'])	m_toolInputCommands.left = true;
-	else					m_toolInputCommands.left = false;
+	if (m_keyArray['A'])	m_toolInputCommands->left = true;
+	else					m_toolInputCommands->left = false;
 
-	if (m_keyArray['D'])	m_toolInputCommands.right = true;
-	else					m_toolInputCommands.right = false;
+	if (m_keyArray['D'])	m_toolInputCommands->right = true;
+	else					m_toolInputCommands->right = false;
 	//rotation
-	if (m_keyArray['E'])	m_toolInputCommands.up = true;
-	else					m_toolInputCommands.up = false;
+	if (m_keyArray['E'])	m_toolInputCommands->up = true;
+	else					m_toolInputCommands->up = false;
 
-	if (m_keyArray['Q'])	m_toolInputCommands.down = true;
-	else					m_toolInputCommands.down = false;
+	if (m_keyArray['Q'])	m_toolInputCommands->down = true;
+	else					m_toolInputCommands->down = false;
 
-	if (m_keyArray[VK_CONTROL]) m_toolInputCommands.ctrlDown = true;
-	else						m_toolInputCommands.ctrlDown = false;
+	if (m_keyArray['Z'])	m_toolInputCommands->undoDown = true;
+	else					m_toolInputCommands->undoDown = false;
 
-	if (m_keyArray[VK_TAB])		m_toolInputCommands.tabDown = true;
-	else						m_toolInputCommands.tabDown = false;
+	if (m_keyArray['Y'])	m_toolInputCommands->redoDown = true;
+	else					m_toolInputCommands->redoDown = false;
 
+
+	if (m_keyArray['C'])	m_toolInputCommands->c_key_down = true;
+	else					m_toolInputCommands->c_key_down = false;
+
+	if (m_keyArray['V'])	m_toolInputCommands->v_key_down = true;
+	else					m_toolInputCommands->v_key_down = false;
+
+
+	if (m_keyArray[VK_CONTROL]) m_toolInputCommands->ctrlDown = true;
+	else						m_toolInputCommands->ctrlDown = false;
+
+	if (m_keyArray[VK_TAB])		m_toolInputCommands->tabDown = true;
+	else						m_toolInputCommands->tabDown = false;
+
+	if (m_keyArray[VK_DELETE])	m_toolInputCommands->deleteDown = true;
+	else						m_toolInputCommands->deleteDown = false;
 
 
 }

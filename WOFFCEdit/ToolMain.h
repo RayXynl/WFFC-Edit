@@ -8,7 +8,8 @@
 #include "InputCommands.h"
 #include "ObjectManipulationDialog.h"
 #include <vector>
-
+#include <stack>
+#include "Structures.h"
 
 class ToolMain
 {
@@ -17,38 +18,45 @@ public: //methods
 	~ToolMain();
 
 	//onAction - These are the interface to MFC
-	void	onActionInitialise(HWND handle, int width, int height, ObjectManipulationDialog* objectDialogRef);			//Passes through handle and hieght and width and initialises DirectX renderer and SQL LITE
+	void	onActionInitialise(HWND handle, int width, int height, ObjectManipulationDialog* objectDialogRef, InputCommands* toolInputCommands);			//Passes through handle and hieght and width and initialises DirectX renderer and SQL LITE
 	void	onActionFocusCamera();
 	void	onActionLoad();													//load the current chunk
 	std::vector<int>		getCurrentSelectionID();						//returns the selection number of currently selected object so that It can be displayed.
 	afx_msg	void			onActionSave();									//save the current chunk
 	afx_msg void			onActionSaveTerrain();							//save chunk geometry
 
-	void	Tick(MSG *msg);
-	void	UpdateInput(MSG *msg);
+	void					Tick(MSG *msg);
+	void					UpdateInput(MSG *msg);
+private:				
+	void					onContentAdded();
+
 
 public:	//variables
-	std::vector<SceneObject>    m_sceneGraph;	//our scenegraph storing all the objects in the current chunk
+	std::vector<SceneObject>    m_sceneGraph;			//our scenegraph storing all the objects in the current chunk
 	std::vector<DisplayObject>	m_displayList;
-	ChunkObject					m_chunk;		//our landscape chunk
+	ChunkObject					m_chunk;				//our landscape chunk
 
-	std::vector<int> m_selectedObject;						//ID of current Selection
-private:	//methods
-	void	onContentAdded();
+	std::vector<int>			m_selectedObject;		//ID of current Selection
+	std::vector<SceneObject>	m_copyList;
 
+	bool						m_objManipHeld;
+	bool						m_objManipHeldPrev;
 private:	//variables
-	HWND	m_toolHandle;		//Handle to the  window
-	Game	m_d3dRenderer;		//Instance of D3D rendering system for our tool
-	InputCommands m_toolInputCommands;		//input commands that we want to use and possibly pass over to the renderer
-//	std::vector<DisplayObject>* m_displayList;
-	CRect	WindowRECT;		//Window area rectangle. 
-	char	m_keyArray[256];
-	sqlite3 *m_databaseConnection;	//sqldatabase handle
+	HWND						m_toolHandle;			//Handle to the  window
+	Game						m_d3dRenderer;			//Instance of D3D rendering system for our tool
+	InputCommands*				m_toolInputCommands;	//input commands that we want to use and possibly pass over to the renderer
+	CRect						WindowRECT;				//Window area rectangle. 
+	char						m_keyArray[256];
+	sqlite3						*m_databaseConnection;	//sqldatabase handle
 
-	int m_width;		//dimensions passed to directX
-	int m_height;
-	int m_currentChunk;			//the current chunk of thedatabase that we are operating on.  Dictates loading and saving. 
+	int							m_width;				//dimensions passed to directX
+	int							m_height;
+	int							m_currentChunk;			//the current chunk of thedatabase that we are operating on.  Dictates loading and saving. 
 	
-	ObjectManipulationDialog* m_ToolObjectManipDialog;
+	ObjectManipulationDialog*	m_ToolObjectManipDialog;
+
 	
+
+	std::stack<DObjectState>	m_undoStack;
+	std::stack<DObjectState>	m_redoStack;
 };

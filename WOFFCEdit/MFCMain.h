@@ -10,6 +10,7 @@
 #include "MFCFrame.h"
 #include "SelectDialogue.h"
 #include "ObjectManipulationDialog.h"
+#include "InputCommands.h"
 
 
 
@@ -22,13 +23,13 @@ public:
 	int  Run();
 
 private:
-
 	CMyFrame * m_frame;	//handle to the frame where all our UI is
 	HWND m_toolHandle;	//Handle to the MFC window
 	ToolMain m_ToolSystem;	//Instance of Tool System that we interface to. 
 	CRect WindowRECT;	//Window area rectangle. 
 	SelectDialogue m_ToolSelectDialogue;			//for modeless dialogue, declare it here
 	ObjectManipulationDialog m_ToolObjectManipDialog;
+	InputCommands m_toolInputCommands;
 	int m_width;		
 	int m_height;
 	

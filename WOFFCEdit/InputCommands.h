@@ -17,10 +17,27 @@ struct InputCommands
 	int mouse_Y;
 
 	bool ctrlDown;
+
 	bool tabDown;
 	bool tabPrevState;
 
+	bool undoDown;
+	bool undoDownPrevState;
+
+	bool redoDown;
+	bool redoDownPrevState;
+
+	bool deleteDown;
+	
+
 	bool g_key_down;
+	bool z_key_down;
+	bool y_key_down;
+
+	bool c_key_down;
+	bool c_key_prev;
+	bool v_key_down;
+	bool v_key_prev;
 
 	int editMode;
 

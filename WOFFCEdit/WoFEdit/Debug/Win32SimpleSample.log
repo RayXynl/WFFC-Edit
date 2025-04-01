@@ -1,21 +1,27 @@
-﻿  ObjectManipulationDialog.cpp
-  _WIN32_WINNT not defined. Defaulting to _WIN32_WINNT_MAXVER (see WinSDKVer.h)
-D:\CMP405\WFFC-Edit\WOFFCEdit\ObjectManipulationDialog.cpp(159,13): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-D:\CMP405\WFFC-Edit\WOFFCEdit\ObjectManipulationDialog.cpp(168,21): warning C4018: '<': signed/unsigned mismatch
-D:\CMP405\WFFC-Edit\WOFFCEdit\ObjectManipulationDialog.cpp(183,13): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-D:\CMP405\WFFC-Edit\WOFFCEdit\ObjectManipulationDialog.cpp(192,21): warning C4018: '<': signed/unsigned mismatch
-D:\CMP405\WFFC-Edit\WOFFCEdit\ObjectManipulationDialog.cpp(207,13): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-D:\CMP405\WFFC-Edit\WOFFCEdit\ObjectManipulationDialog.cpp(216,21): warning C4018: '<': signed/unsigned mismatch
-D:\CMP405\WFFC-Edit\WOFFCEdit\ObjectManipulationDialog.cpp(231,15): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-D:\CMP405\WFFC-Edit\WOFFCEdit\ObjectManipulationDialog.cpp(240,21): warning C4018: '<': signed/unsigned mismatch
-D:\CMP405\WFFC-Edit\WOFFCEdit\ObjectManipulationDialog.cpp(255,15): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-D:\CMP405\WFFC-Edit\WOFFCEdit\ObjectManipulationDialog.cpp(264,21): warning C4018: '<': signed/unsigned mismatch
-D:\CMP405\WFFC-Edit\WOFFCEdit\ObjectManipulationDialog.cpp(280,15): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-D:\CMP405\WFFC-Edit\WOFFCEdit\ObjectManipulationDialog.cpp(289,21): warning C4018: '<': signed/unsigned mismatch
-D:\CMP405\WFFC-Edit\WOFFCEdit\ObjectManipulationDialog.cpp(304,17): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-D:\CMP405\WFFC-Edit\WOFFCEdit\ObjectManipulationDialog.cpp(313,21): warning C4018: '<': signed/unsigned mismatch
-D:\CMP405\WFFC-Edit\WOFFCEdit\ObjectManipulationDialog.cpp(328,17): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-D:\CMP405\WFFC-Edit\WOFFCEdit\ObjectManipulationDialog.cpp(337,21): warning C4018: '<': signed/unsigned mismatch
-D:\CMP405\WFFC-Edit\WOFFCEdit\ObjectManipulationDialog.cpp(352,17): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-D:\CMP405\WFFC-Edit\WOFFCEdit\ObjectManipulationDialog.cpp(361,21): warning C4018: '<': signed/unsigned mismatch
+﻿  Game.cpp
+D:\CMP405\WFFC-Edit\WOFFCEdit\Game.cpp(200,61): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\CMP405\WFFC-Edit\WOFFCEdit\Game.cpp(199,61): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\CMP405\WFFC-Edit\WOFFCEdit\Game.cpp(198,101): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\CMP405\WFFC-Edit\WOFFCEdit\Game.cpp(184,10): warning C4101: 'Buffer': unreferenced local variable
+D:\CMP405\WFFC-Edit\WOFFCEdit\Game.cpp(560,82): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\CMP405\WFFC-Edit\WOFFCEdit\Game.cpp(560,57): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\CMP405\WFFC-Edit\WOFFCEdit\Game.cpp(561,81): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\CMP405\WFFC-Edit\WOFFCEdit\Game.cpp(561,56): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\CMP405\WFFC-Edit\WOFFCEdit\Game.cpp(564,20): warning C4018: '<': signed/unsigned mismatch
+D:\CMP405\WFFC-Edit\WOFFCEdit\Game.cpp(572,50): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\CMP405\WFFC-Edit\WOFFCEdit\Game.cpp(571,155): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\CMP405\WFFC-Edit\WOFFCEdit\Game.cpp(571,102): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\CMP405\WFFC-Edit\WOFFCEdit\Game.cpp(578,111): warning C4244: 'argument': conversion from 'LONG' to 'float', possible loss of data
+D:\CMP405\WFFC-Edit\WOFFCEdit\Game.cpp(578,85): warning C4244: 'argument': conversion from 'LONG' to 'float', possible loss of data
+D:\CMP405\WFFC-Edit\WOFFCEdit\Game.cpp(580,109): warning C4244: 'argument': conversion from 'LONG' to 'float', possible loss of data
+D:\CMP405\WFFC-Edit\WOFFCEdit\Game.cpp(580,83): warning C4244: 'argument': conversion from 'LONG' to 'float', possible loss of data
+D:\CMP405\WFFC-Edit\WOFFCEdit\Game.cpp(589,21): warning C4018: '<': signed/unsigned mismatch
+D:\CMP405\WFFC-Edit\WOFFCEdit\Game.cpp(650,20): warning C4018: '<': signed/unsigned mismatch
+D:\CMP405\WFFC-Edit\WOFFCEdit\Game.cpp(674,20): warning C4018: '<': signed/unsigned mismatch
+D:\CMP405\WFFC-Edit\WOFFCEdit\Game.cpp(696,20): warning C4018: '<': signed/unsigned mismatch
+D:\CMP405\WFFC-Edit\WOFFCEdit\Game.cpp(776,20): warning C4018: '<': signed/unsigned mismatch
+D:\CMP405\WFFC-Edit\WOFFCEdit\Game.cpp(794,20): warning C4018: '<': signed/unsigned mismatch
+D:\CMP405\WFFC-Edit\WOFFCEdit\Game.cpp(818,20): warning C4018: '<': signed/unsigned mismatch
+D:\CMP405\WFFC-Edit\WOFFCEdit\Game.cpp(823,27): warning C4018: '<': signed/unsigned mismatch
+D:\CMP405\WFFC-Edit\WOFFCEdit\Game.cpp(828,27): warning C4018: '<': signed/unsigned mismatch
   Win32SimpleSample.vcxproj -> D:\CMP405\WFFC-Edit\WOFFCEdit\Debug\WoFEdit.exe

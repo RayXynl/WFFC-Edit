@@ -4,6 +4,9 @@
 #include "afxwin.h"
 #include "SceneObject.h"
 #include "DisplayObject.h"
+#include "InputCommands.h"
+#include "Structures.h"
+#include <stack>
 #include <vector>
 
 class ObjectManipulationDialog : public CDialogEx
@@ -13,9 +16,9 @@ public:
 	ObjectManipulationDialog(CWnd* pParent, std::vector<SceneObject>* SceneGraph);
 	ObjectManipulationDialog(CWnd* pParent = NULL);
 	virtual ~ObjectManipulationDialog();
-	void SetObjectData(std::vector<SceneObject>* SceneGraph, std::vector<int>* Selection, std::vector<DisplayObject>* displaylist);	//passing in pointers to the data the class will operate on.
+	void SetObjectData(std::vector<SceneObject>* SceneGraph, std::vector<int>* selection, std::vector<DisplayObject>* displayList, InputCommands* inputCommands);	//passing in pointers to the data the class will operate on.
 	void SetObjectData(std::vector<DisplayObject>* displaylist);	//passing in pointers to the data the class will operate on.
-
+	void SetStacks(std::stack<DObjectState>* undoStack, std::stack<DObjectState>* redoStack);
 	// Dialog Data
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_ObjManip };
@@ -26,17 +29,25 @@ protected:
 	afx_msg void End();		//kill the dialogue
 	//afx_msg void Select();	//Item has been selected
 
-	std::vector<SceneObject>* m_sceneGraph;
-	//std::vector<DisplayObject>			m_displayList;
-	std::vector<int>* m_currentSelection;
+	std::vector<SceneObject>*	m_sceneGraph;
+	std::vector<int>*			m_currentSelection;
 	std::vector<DisplayObject>*	m_displayList;
-	CEdit m_editX, m_editY, m_editZ;
-	CEdit m_RotX, m_RotY, m_RotZ;
-	CEdit m_ScaleX, m_ScaleY, m_ScaleZ;
+	InputCommands*				m_toolInputCommands;
 
-	bool m_onNewSelection;
+	CEdit						m_editX,	m_editY,	m_editZ;
+	CEdit						m_RotX,		m_RotY,		m_RotZ;
+	CEdit						m_ScaleX,	m_ScaleY,	m_ScaleZ;
+
+	std::stack<DObjectState>*	m_undoStack;
+	std::stack<DObjectState>*	m_redoStack;
+
+	bool						m_onNewSelection;
 
 	DECLARE_MESSAGE_MAP()
+
+private:
+	void PushUndo(DisplayObject& object);
+	void ApplyObjectChange(float value, TransformType transform);
 public:
 	// Control variable for more efficient access of the listbox
 	virtual BOOL OnInitDialog() override;
@@ -53,6 +64,10 @@ public:
 	afx_msg void OnEnChangeScaleX();
 	afx_msg void OnEnChangeScaleY();
 	afx_msg void OnEnChangeScaleZ();
+	afx_msg void OnBnClickedFreemoveloc();
+	afx_msg void OnBnClickedFreemoveloc2();
+	afx_msg void OnBnClickedFreemoverot();
+	afx_msg void OnBnClickedFreemovescale();
 };
 
 INT_PTR CALLBACK SelectProc(HWND   hwndDlg, UINT   uMsg, WPARAM wParam, LPARAM lParam);

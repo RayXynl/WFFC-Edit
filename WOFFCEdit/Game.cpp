@@ -7,8 +7,9 @@
 #include "DisplayObject.h"
 #include <string>
 #include <algorithm>
-
-
+#include <iostream>
+#include <string>
+#include <Windows.h>
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
 
@@ -41,9 +42,11 @@ Game::~Game()
 }
 
 // Initialize the Direct3D resources required to run.
-void Game::Initialize(HWND window, int width, int height, std::vector<DisplayObject>* displayList)
+void Game::Initialize(HWND window, int width, int height, std::vector<DisplayObject>* displayList, std::stack<DObjectState>* redoStack, std::stack<DObjectState>* undoStack)
 {
 	m_displayList = displayList;
+	m_undoStack = undoStack;
+	m_redoStack = redoStack;
     m_gamePad = std::make_unique<GamePad>();
 
     m_keyboard = std::make_unique<Keyboard>();
@@ -362,6 +365,8 @@ void Game::BuildDisplayList(std::vector<SceneObject> * SceneGraph)
 			}
 		});
 
+		newDisplayObject.m_ID = SceneGraph->at(i).ID;
+
 		//set position
 		newDisplayObject.m_position.x = SceneGraph->at(i).posX;
 		newDisplayObject.m_position.y = SceneGraph->at(i).posY;
@@ -644,11 +649,187 @@ void Game::MoveObjects(std::vector<int>& selectedIDs)
 
 	for (int i = 0; i < selectedIDs.size(); i++)
 	{
-		if (m_InputCommands.forward)	m_displayList->at(selectedIDs[i]).m_position.z += 0.1f;
-		if (m_InputCommands.back)		m_displayList->at(selectedIDs[i]).m_position.z -= 0.1f;
-		if (m_InputCommands.left)		m_displayList->at(selectedIDs[i]).m_position.x += 0.1f;
-		if (m_InputCommands.right)		m_displayList->at(selectedIDs[i]).m_position.x -= 0.1f;
-		if (m_InputCommands.up)			m_displayList->at(selectedIDs[i]).m_position.y += 0.1f;
-		if (m_InputCommands.down)		m_displayList->at(selectedIDs[i]).m_position.y -= 0.1f;
+		DisplayObject& object = m_displayList->at(selectedIDs[i]);
+
+		if (m_InputCommands.forward)	object.m_position.z += 0.1f;
+		if (m_InputCommands.back)		object.m_position.z -= 0.1f;
+		if (m_InputCommands.left)		object.m_position.x += 0.1f;
+		if (m_InputCommands.right)		object.m_position.x -= 0.1f;
+		if (m_InputCommands.up)			object.m_position.y += 0.1f;
+		if (m_InputCommands.down)		object.m_position.y -= 0.1f;
 	}
+}
+
+void Game::RotateObjects(std::vector<int>& selectedIDs)
+{
+	if (selectedIDs.empty())
+		return;
+
+	if (selectedIDs[0] <= -1)
+		return;
+
+	if (m_displayList->empty())
+		return;
+
+	for (int i = 0; i < selectedIDs.size(); i++)
+	{
+		if (m_InputCommands.forward)	m_displayList->at(selectedIDs[i]).m_orientation.z -= 0.5f;
+		if (m_InputCommands.back)		m_displayList->at(selectedIDs[i]).m_orientation.z += 0.5f;
+		if (m_InputCommands.left)		m_displayList->at(selectedIDs[i]).m_orientation.x -= 0.5f;
+		if (m_InputCommands.right)		m_displayList->at(selectedIDs[i]).m_orientation.x += 0.5f;
+		if (m_InputCommands.up)			m_displayList->at(selectedIDs[i]).m_orientation.y -= 0.5f;
+		if (m_InputCommands.down)		m_displayList->at(selectedIDs[i]).m_orientation.y += 0.5f;
+	}
+}
+
+void Game::ScaleObjects(std::vector<int>& selectedIDs)
+{
+	if (selectedIDs.empty())
+		return;
+
+	if (selectedIDs[0] <= -1)
+		return;
+
+	if (m_displayList->empty())
+		return;
+
+	for (int i = 0; i < selectedIDs.size(); i++)
+	{
+		if (m_displayList->at(selectedIDs[i]).m_scale.x < 0.0f) m_displayList->at(selectedIDs[i]).m_scale.x *= -1.f;
+		if (m_displayList->at(selectedIDs[i]).m_scale.y < 0.0f) m_displayList->at(selectedIDs[i]).m_scale.y *= -1.f;
+		if (m_displayList->at(selectedIDs[i]).m_scale.z < 0.0f) m_displayList->at(selectedIDs[i]).m_scale.z *= -1.f;
+
+		if (m_InputCommands.forward)	m_displayList->at(selectedIDs[i]).m_scale.z += 0.1f;
+		if (m_InputCommands.back)		m_displayList->at(selectedIDs[i]).m_scale.z -= 0.1f;
+		if (m_InputCommands.left)		m_displayList->at(selectedIDs[i]).m_scale.x -= 0.1f;
+		if (m_InputCommands.right)		m_displayList->at(selectedIDs[i]).m_scale.x += 0.1f;
+		if (m_InputCommands.up)			m_displayList->at(selectedIDs[i]).m_scale.y += 0.1f;
+		if (m_InputCommands.down)		m_displayList->at(selectedIDs[i]).m_scale.y -= 0.1f;
+	}
+}
+
+void Game::Undo(std::stack<DObjectState>* undoStack, std::stack<DObjectState>* redoStack)
+{
+	if (!undoStack->empty())
+	{
+		for (int i = 0; i < 2; i++)
+		{
+			DObjectState& topState = undoStack->top();
+
+			if (topState.m_objPtr)
+			{
+				topState.m_objPtr->m_position.x = topState.m_posX;
+				topState.m_objPtr->m_position.y = topState.m_posY;
+				topState.m_objPtr->m_position.z = topState.m_posZ;
+
+				topState.m_objPtr->m_orientation.x = topState.m_rotX;
+				topState.m_objPtr->m_orientation.y = topState.m_rotY;
+				topState.m_objPtr->m_orientation.z = topState.m_rotZ;
+
+				topState.m_objPtr->m_scale.x = topState.m_scaleX;
+				topState.m_objPtr->m_scale.y = topState.m_scaleY;
+				topState.m_objPtr->m_scale.z = topState.m_scaleZ;
+
+				redoStack->push(topState);
+				undoStack->pop();
+			}
+		}
+	}
+}
+
+void Game::Redo(std::stack<DObjectState>* redoStack, std::stack<DObjectState>* undoStack)
+{
+	if (!redoStack->empty())
+	{
+		for (int i = 0; i < 2; i++)
+		{
+			DObjectState topState = redoStack->top();
+
+			if (topState.m_objPtr)
+			{
+				topState.m_objPtr->m_position.x = topState.m_posX;
+				topState.m_objPtr->m_position.y = topState.m_posY;
+				topState.m_objPtr->m_position.z = topState.m_posZ;
+
+				topState.m_objPtr->m_orientation.x = topState.m_rotX;
+				topState.m_objPtr->m_orientation.y = topState.m_rotY;
+				topState.m_objPtr->m_orientation.z = topState.m_rotZ;
+
+				topState.m_objPtr->m_scale.x = topState.m_scaleX;
+				topState.m_objPtr->m_scale.y = topState.m_scaleY;
+				topState.m_objPtr->m_scale.z = topState.m_scaleZ;
+
+				undoStack->push(topState);
+				redoStack->pop();
+			}
+		}
+	}
+}
+
+void Game::Copy(std::vector<int>& selectedIDs, std::vector<SceneObject>& copiedObjects, std::vector<SceneObject>& m_sceneGraph)
+{
+	if (selectedIDs.empty() || selectedIDs[0] <= 0 || m_displayList->empty())
+		return;
+
+	copiedObjects.clear();
+
+	for (int i = 0; i < selectedIDs.size(); i++)
+	{
+		if (selectedIDs[i] <= -1)
+			continue;
+
+		SceneObject& copied = m_sceneGraph[selectedIDs[i]];
+		copiedObjects.push_back(copied);
+		
+	}
+}	
+
+
+
+void Game::Paste(std::vector<SceneObject>& copiedObjects, std::vector<SceneObject>& m_sceneGraph)
+{
+	if (copiedObjects.empty())
+		return;
+
+	for (int i = 0; i < copiedObjects.size(); i++)
+	{
+		SceneObject& newObject = copiedObjects[i];
+
+		newObject.ID = m_sceneGraph.size() + 1;
+
+		newObject.posX += 1.0f;
+		newObject.posY += 1.0f;
+		newObject.posZ += 1.0f;
+
+		m_sceneGraph.push_back(newObject);
+
+	}
+	BuildDisplayList(&m_sceneGraph);
+}
+
+void Game::Delete(std::vector<int>& selectedIDs, std::vector<SceneObject>& m_sceneGraph)
+{
+	if (selectedIDs.empty() || selectedIDs[0] == -1 || m_displayList->empty())
+		return;
+
+	// Sort in descending order to prevent index shifting issues
+	std::sort(selectedIDs.begin(), selectedIDs.end(), std::greater<int>());
+
+	for (int i = 0; i < selectedIDs.size(); i++)
+	{
+		int index = selectedIDs[i];
+
+		// Ensure index is within valid range before deleting
+		if (index >= 0 && index < m_sceneGraph.size())
+		{
+			m_sceneGraph.erase(m_sceneGraph.begin() + index);
+		}
+
+		if (index >= 0 && index < m_displayList->size())
+		{
+			m_displayList->erase(m_displayList->begin() + index);
+		}
+	}
+
+	selectedIDs.clear();
 }
