@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <iostream>
 #include <string>
+#include <stack>
 #include <Windows.h>
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
@@ -331,7 +332,10 @@ void Game::BuildDisplayList(std::vector<SceneObject> * SceneGraph)
 	{
 		m_displayList->clear();		//if not, empty it
 	}
-
+	std::sort(SceneGraph->begin(), SceneGraph->end(),
+		[](const SceneObject& a, const SceneObject& b) {
+			return a.ID < b.ID;
+		});
 	//for every item in the scenegraph
 	int numObjects = SceneGraph->size();
 	for (int i = 0; i < numObjects; i++)
@@ -404,6 +408,76 @@ void Game::BuildDisplayList(std::vector<SceneObject> * SceneGraph)
 		
 		
 		
+}
+
+void Game::BuildDisplayObject(SceneObject* SceneObject)
+{
+	auto device = m_deviceResources->GetD3DDevice();
+	auto devicecontext = m_deviceResources->GetD3DDeviceContext();
+
+
+	//create a temp display object that we will populate then append to the display list.
+	DisplayObject newDisplayObject;
+
+	//load model
+	std::wstring modelwstr = StringToWCHART(SceneObject->model_path);							//convect string to Wchar
+	newDisplayObject.m_model = Model::CreateFromCMO(device, modelwstr.c_str(), *m_fxFactory, true);	//get DXSDK to load model "False" for LH coordinate system (maya)
+
+	//Load Texture
+	std::wstring texturewstr = StringToWCHART(SceneObject->tex_diffuse_path);								//convect string to Wchar
+	HRESULT rs;
+	rs = CreateDDSTextureFromFile(device, texturewstr.c_str(), nullptr, &newDisplayObject.m_texture_diffuse);	//load tex into Shader resource
+
+	//if texture fails.  load error default
+	if (rs)
+	{
+		CreateDDSTextureFromFile(device, L"database/data/Error.dds", nullptr, &newDisplayObject.m_texture_diffuse);	//load tex into Shader resource
+	}
+
+	//apply new texture to models effect
+	newDisplayObject.m_model->UpdateEffects([&](IEffect* effect) //This uses a Lambda function,  if you dont understand it: Look it up.
+		{
+			auto lights = dynamic_cast<BasicEffect*>(effect);
+			if (lights)
+			{
+				lights->SetTexture(newDisplayObject.m_texture_diffuse);
+			}
+		});
+
+	newDisplayObject.m_ID = SceneObject->ID;
+
+	//set position
+	newDisplayObject.m_position.x = SceneObject->posX;
+	newDisplayObject.m_position.y = SceneObject->posY;
+	newDisplayObject.m_position.z = SceneObject->posZ;
+
+	//setorientation
+	newDisplayObject.m_orientation.x = SceneObject->rotX;
+	newDisplayObject.m_orientation.y = SceneObject->rotY;
+	newDisplayObject.m_orientation.z = SceneObject->rotZ;
+
+	//set scale
+	newDisplayObject.m_scale.x		= SceneObject->scaX;
+	newDisplayObject.m_scale.y		= SceneObject->scaY;
+	newDisplayObject.m_scale.z		= SceneObject->scaZ;
+
+	//set wireframe / render flags
+	newDisplayObject.m_render		= SceneObject->editor_render;
+	newDisplayObject.m_wireframe	= SceneObject->editor_wireframe;
+
+	newDisplayObject.m_light_type			= SceneObject->light_type;
+	newDisplayObject.m_light_diffuse_r		= SceneObject->light_diffuse_r;
+	newDisplayObject.m_light_diffuse_g		= SceneObject->light_diffuse_g;
+	newDisplayObject.m_light_diffuse_b		= SceneObject->light_diffuse_b;
+	newDisplayObject.m_light_specular_r		= SceneObject->light_specular_r;
+	newDisplayObject.m_light_specular_g		= SceneObject->light_specular_g;
+	newDisplayObject.m_light_specular_b		= SceneObject->light_specular_b;
+	newDisplayObject.m_light_spot_cutoff	= SceneObject->light_spot_cutoff;
+	newDisplayObject.m_light_constant		= SceneObject->light_constant;
+	newDisplayObject.m_light_linear			= SceneObject->light_linear;
+	newDisplayObject.m_light_quadratic		= SceneObject->light_quadratic;
+
+	m_displayList->push_back(newDisplayObject);
 }
 
 void Game::BuildDisplayChunk(ChunkObject * SceneChunk)
@@ -588,14 +662,13 @@ std::vector<int> Game::MousePicking(bool multiSelect)
 		//loop through mesh list for object
 		for (int y = 0; y < m_displayList->at(i).m_model.get()->meshes.size(); y++)
 		{
-
 			//checking for ray intersection
 			if (m_displayList->at(i).m_model.get()->meshes[y]->boundingBox.Intersects(nearPoint, pickingVector, pickedDistance))
 			{
 				if (pickedDistance < closestDist)
 				{
 					closestDist = pickedDistance;
-					selected = i;
+					selected = m_displayList->at(i).m_ID;
 				}
 			}
 		}
@@ -646,17 +719,19 @@ void Game::MoveObjects(std::vector<int>& selectedIDs)
 
 	if (m_displayList->empty())
 		return;
+	
+	GetSelectedObject(selectedIDs);
 
-	for (int i = 0; i < selectedIDs.size(); i++)
+	for (int i = 0; i < m_selectedObjects.size(); i++)
 	{
-		DisplayObject& object = m_displayList->at(selectedIDs[i]);
+		DisplayObject* object = m_selectedObjects[i];
 
-		if (m_InputCommands.forward)	object.m_position.z += 0.1f;
-		if (m_InputCommands.back)		object.m_position.z -= 0.1f;
-		if (m_InputCommands.left)		object.m_position.x += 0.1f;
-		if (m_InputCommands.right)		object.m_position.x -= 0.1f;
-		if (m_InputCommands.up)			object.m_position.y += 0.1f;
-		if (m_InputCommands.down)		object.m_position.y -= 0.1f;
+		if (m_InputCommands.forward)	object->m_position.z += 0.1f;
+		if (m_InputCommands.back)		object->m_position.z -= 0.1f;
+		if (m_InputCommands.left)		object->m_position.x += 0.1f;
+		if (m_InputCommands.right)		object->m_position.x -= 0.1f;
+		if (m_InputCommands.up)			object->m_position.y += 0.1f;
+		if (m_InputCommands.down)		object->m_position.y -= 0.1f;
 	}
 }
 
@@ -671,14 +746,18 @@ void Game::RotateObjects(std::vector<int>& selectedIDs)
 	if (m_displayList->empty())
 		return;
 
-	for (int i = 0; i < selectedIDs.size(); i++)
+	GetSelectedObject(selectedIDs);
+
+	for (int i = 0; i < m_selectedObjects.size(); i++)
 	{
-		if (m_InputCommands.forward)	m_displayList->at(selectedIDs[i]).m_orientation.z -= 0.5f;
-		if (m_InputCommands.back)		m_displayList->at(selectedIDs[i]).m_orientation.z += 0.5f;
-		if (m_InputCommands.left)		m_displayList->at(selectedIDs[i]).m_orientation.x -= 0.5f;
-		if (m_InputCommands.right)		m_displayList->at(selectedIDs[i]).m_orientation.x += 0.5f;
-		if (m_InputCommands.up)			m_displayList->at(selectedIDs[i]).m_orientation.y -= 0.5f;
-		if (m_InputCommands.down)		m_displayList->at(selectedIDs[i]).m_orientation.y += 0.5f;
+		DisplayObject* object = m_selectedObjects[i];
+
+		if (m_InputCommands.forward)	object->m_orientation.z -= 0.5f;
+		if (m_InputCommands.back)		object->m_orientation.z += 0.5f;
+		if (m_InputCommands.left)		object->m_orientation.x -= 0.5f;
+		if (m_InputCommands.right)		object->m_orientation.x += 0.5f;
+		if (m_InputCommands.up)			object->m_orientation.y -= 0.5f;
+		if (m_InputCommands.down)		object->m_orientation.y += 0.5f;
 	}
 }
 
@@ -693,22 +772,26 @@ void Game::ScaleObjects(std::vector<int>& selectedIDs)
 	if (m_displayList->empty())
 		return;
 
-	for (int i = 0; i < selectedIDs.size(); i++)
-	{
-		if (m_displayList->at(selectedIDs[i]).m_scale.x < 0.0f) m_displayList->at(selectedIDs[i]).m_scale.x *= -1.f;
-		if (m_displayList->at(selectedIDs[i]).m_scale.y < 0.0f) m_displayList->at(selectedIDs[i]).m_scale.y *= -1.f;
-		if (m_displayList->at(selectedIDs[i]).m_scale.z < 0.0f) m_displayList->at(selectedIDs[i]).m_scale.z *= -1.f;
+	GetSelectedObject(selectedIDs);
 
-		if (m_InputCommands.forward)	m_displayList->at(selectedIDs[i]).m_scale.z += 0.1f;
-		if (m_InputCommands.back)		m_displayList->at(selectedIDs[i]).m_scale.z -= 0.1f;
-		if (m_InputCommands.left)		m_displayList->at(selectedIDs[i]).m_scale.x -= 0.1f;
-		if (m_InputCommands.right)		m_displayList->at(selectedIDs[i]).m_scale.x += 0.1f;
-		if (m_InputCommands.up)			m_displayList->at(selectedIDs[i]).m_scale.y += 0.1f;
-		if (m_InputCommands.down)		m_displayList->at(selectedIDs[i]).m_scale.y -= 0.1f;
+	for (int i = 0; i < m_selectedObjects.size(); i++)
+	{
+		DisplayObject* object = m_selectedObjects[i];
+
+		if (object->m_scale.x < 0.0f)	object->m_scale.x *= -1.f;
+		if (object->m_scale.y < 0.0f)	object->m_scale.y *= -1.f;
+		if (object->m_scale.z < 0.0f)	object->m_scale.z *= -1.f;
+
+		if (m_InputCommands.forward)	object->m_scale.z += 0.1f;
+		if (m_InputCommands.back)		object->m_scale.z -= 0.1f;
+		if (m_InputCommands.left)		object->m_scale.x -= 0.1f;
+		if (m_InputCommands.right)		object->m_scale.x += 0.1f;
+		if (m_InputCommands.up)			object->m_scale.y += 0.1f;
+		if (m_InputCommands.down)		object->m_scale.y -= 0.1f;
 	}
 }
 
-void Game::Undo(std::stack<DObjectState>* undoStack, std::stack<DObjectState>* redoStack)
+void Game::Undo(std::stack<DObjectState>* undoStack, std::stack<DObjectState>* redoStack, std::vector<SceneObject>& sceneGraph)
 {
 	if (!undoStack->empty())
 	{
@@ -716,19 +799,66 @@ void Game::Undo(std::stack<DObjectState>* undoStack, std::stack<DObjectState>* r
 		{
 			DObjectState& topState = undoStack->top();
 
-			if (topState.m_objPtr)
+			if (topState.m_isNewObject) 
 			{
-				topState.m_objPtr->m_position.x = topState.m_posX;
-				topState.m_objPtr->m_position.y = topState.m_posY;
-				topState.m_objPtr->m_position.z = topState.m_posZ;
+				auto sceneObj = std::find_if(sceneGraph.begin(), sceneGraph.end(),
+					[&](const SceneObject& obj) { return obj.ID == topState.m_ID; });
 
-				topState.m_objPtr->m_orientation.x = topState.m_rotX;
-				topState.m_objPtr->m_orientation.y = topState.m_rotY;
-				topState.m_objPtr->m_orientation.z = topState.m_rotZ;
+				if (sceneObj != sceneGraph.end())
+				{
+					if (i == 0)
+						sceneGraph.erase(sceneObj);		
+				}
+				else
+				{
+					SceneObject newObject;
 
-				topState.m_objPtr->m_scale.x = topState.m_scaleX;
-				topState.m_objPtr->m_scale.y = topState.m_scaleY;
-				topState.m_objPtr->m_scale.z = topState.m_scaleZ;
+					newObject.ID = topState.m_ID;
+					newObject.posX = topState.m_displayRef.m_position.x;
+					newObject.posY = topState.m_displayRef.m_position.y;
+					newObject.posZ = topState.m_displayRef.m_position.z;
+
+					newObject.rotX = topState.m_displayRef.m_orientation.x;
+					newObject.rotY = topState.m_displayRef.m_orientation.x;
+					newObject.rotZ = topState.m_displayRef.m_orientation.x;
+
+					newObject.scaX = topState.m_displayRef.m_scale.x;
+					newObject.scaY = topState.m_displayRef.m_scale.x;
+					newObject.scaZ = topState.m_displayRef.m_scale.x;
+				
+						
+					newObject.model_path = topState.m_sceneRef.model_path;			
+					
+					newObject.tex_diffuse_path = topState.m_sceneRef.tex_diffuse_path;	
+					newObject.chunk_ID = topState.m_sceneRef.chunk_ID;
+
+					sceneGraph.push_back(newObject);
+				
+					BuildDisplayList(&sceneGraph);
+				}
+
+				redoStack->push(topState);
+				undoStack->pop();
+			}
+			else 
+			{
+				auto it = std::find_if(m_displayList->begin(), m_displayList->end(),
+					[&](const DisplayObject& obj) { return obj.m_ID == topState.m_ID; });
+				
+				if (it != m_displayList->end())
+				{
+					it->m_position.x = topState.m_displayRef.m_position.x;
+					it->m_position.y = topState.m_displayRef.m_position.y;
+					it->m_position.z = topState.m_displayRef.m_position.z;
+
+					it->m_orientation.x = topState.m_displayRef.m_orientation.x;
+					it->m_orientation.y = topState.m_displayRef.m_orientation.y;
+					it->m_orientation.z = topState.m_displayRef.m_orientation.z;
+
+					it->m_scale.x = topState.m_displayRef.m_scale.x;
+					it->m_scale.y = topState.m_displayRef.m_scale.y;
+					it->m_scale.z = topState.m_displayRef.m_scale.z;
+				}
 
 				redoStack->push(topState);
 				undoStack->pop();
@@ -737,27 +867,82 @@ void Game::Undo(std::stack<DObjectState>* undoStack, std::stack<DObjectState>* r
 	}
 }
 
-void Game::Redo(std::stack<DObjectState>* redoStack, std::stack<DObjectState>* undoStack)
+void Game::Redo(std::stack<DObjectState>* redoStack, std::stack<DObjectState>* undoStack, std::vector<SceneObject>& sceneGraph)
 {
+	if (redoStack->size() == 1)
+		return;
+
 	if (!redoStack->empty())
 	{
 		for (int i = 0; i < 2; i++)
 		{
 			DObjectState topState = redoStack->top();
 
-			if (topState.m_objPtr)
+			if (topState.m_isNewObject)
 			{
-				topState.m_objPtr->m_position.x = topState.m_posX;
-				topState.m_objPtr->m_position.y = topState.m_posY;
-				topState.m_objPtr->m_position.z = topState.m_posZ;
+				auto sceneObj = std::find_if(sceneGraph.begin(), sceneGraph.end(),
+					[&](const SceneObject& obj) { return obj.ID == topState.m_ID; });
 
-				topState.m_objPtr->m_orientation.x = topState.m_rotX;
-				topState.m_objPtr->m_orientation.y = topState.m_rotY;
-				topState.m_objPtr->m_orientation.z = topState.m_rotZ;
+				if (sceneObj != sceneGraph.end())
+				{
+					if (i == 0)
+						sceneGraph.erase(sceneObj);
 
-				topState.m_objPtr->m_scale.x = topState.m_scaleX;
-				topState.m_objPtr->m_scale.y = topState.m_scaleY;
-				topState.m_objPtr->m_scale.z = topState.m_scaleZ;
+				}
+				else
+				{
+					if (i == 0)
+					{
+						SceneObject newObject;
+
+						newObject.ID = topState.m_ID;
+						newObject.posX = topState.m_displayRef.m_position.x;
+						newObject.posY = topState.m_displayRef.m_position.y;
+						newObject.posZ = topState.m_displayRef.m_position.z;
+
+						newObject.rotX = topState.m_displayRef.m_orientation.x;
+						newObject.rotY = topState.m_displayRef.m_orientation.x;
+						newObject.rotZ = topState.m_displayRef.m_orientation.x;
+
+						newObject.scaX = topState.m_displayRef.m_scale.x;
+						newObject.scaY = topState.m_displayRef.m_scale.x;
+						newObject.scaZ = topState.m_displayRef.m_scale.x;
+
+
+						newObject.model_path = topState.m_sceneRef.model_path;
+
+						newObject.tex_diffuse_path = topState.m_sceneRef.tex_diffuse_path;
+						newObject.chunk_ID = topState.m_sceneRef.chunk_ID;
+
+
+						sceneGraph.push_back(newObject);
+						BuildDisplayObject(&newObject);
+						BuildDisplayList(&sceneGraph);
+					}
+				}
+				BuildDisplayList(&sceneGraph);
+	
+				undoStack->push(topState);
+				redoStack->pop();
+			}
+			else 
+			{
+				auto it = std::find_if(m_displayList->begin(), m_displayList->end(),
+					[&](const DisplayObject& obj) { return obj.m_ID == topState.m_ID; });
+				if (it != m_displayList->end())
+				{
+					it->m_position.x = topState.m_displayRef.m_position.x;
+					it->m_position.y = topState.m_displayRef.m_position.y;
+					it->m_position.z = topState.m_displayRef.m_position.z;
+
+					it->m_orientation.x = topState.m_displayRef.m_orientation.x;
+					it->m_orientation.y = topState.m_displayRef.m_orientation.y;
+					it->m_orientation.z = topState.m_displayRef.m_orientation.z;
+
+					it->m_scale.x = topState.m_displayRef.m_scale.x;
+					it->m_scale.y = topState.m_displayRef.m_scale.y;
+					it->m_scale.z = topState.m_displayRef.m_scale.z;
+				}
 
 				undoStack->push(topState);
 				redoStack->pop();
@@ -780,11 +965,8 @@ void Game::Copy(std::vector<int>& selectedIDs, std::vector<SceneObject>& copiedO
 
 		SceneObject& copied = m_sceneGraph[selectedIDs[i]];
 		copiedObjects.push_back(copied);
-		
 	}
 }	
-
-
 
 void Game::Paste(std::vector<SceneObject>& copiedObjects, std::vector<SceneObject>& m_sceneGraph)
 {
@@ -802,9 +984,14 @@ void Game::Paste(std::vector<SceneObject>& copiedObjects, std::vector<SceneObjec
 		newObject.posZ += 1.0f;
 
 		m_sceneGraph.push_back(newObject);
+		BuildDisplayObject(&newObject);
 
-	}
-	BuildDisplayList(&m_sceneGraph);
+		DisplayObject& object = m_displayList->back();
+
+		DObjectState undoState(object, newObject, newObject.ID, true);
+		m_undoStack->push(undoState);
+		m_undoStack->push(undoState);
+	} 
 }
 
 void Game::Delete(std::vector<int>& selectedIDs, std::vector<SceneObject>& m_sceneGraph)
@@ -812,24 +999,48 @@ void Game::Delete(std::vector<int>& selectedIDs, std::vector<SceneObject>& m_sce
 	if (selectedIDs.empty() || selectedIDs[0] == -1 || m_displayList->empty())
 		return;
 
-	// Sort in descending order to prevent index shifting issues
-	std::sort(selectedIDs.begin(), selectedIDs.end(), std::greater<int>());
+	GetSelectedObject(selectedIDs);
 
-	for (int i = 0; i < selectedIDs.size(); i++)
+	// Collect the scene objects to delete, without erasing during iteration
+	for (int i = 0; i < m_selectedObjects.size(); i++)
 	{
-		int index = selectedIDs[i];
+		DisplayObject& object = *m_selectedObjects[i];
 
-		// Ensure index is within valid range before deleting
-		if (index >= 0 && index < m_sceneGraph.size())
-		{
-			m_sceneGraph.erase(m_sceneGraph.begin() + index);
-		}
+		auto sceneObj = std::find_if(m_sceneGraph.begin(), m_sceneGraph.end(),
+			[&](const SceneObject& obj) { return obj.ID == object.m_ID; });
 
-		if (index >= 0 && index < m_displayList->size())
+		// Only add the scene objects to the undo stack if found
+		if (sceneObj != m_sceneGraph.end())
 		{
-			m_displayList->erase(m_displayList->begin() + index);
+			DObjectState undoState(object, *sceneObj, object.m_ID, true);
+			m_undoStack->push(undoState);
+			m_undoStack->push(undoState);
+
+			// Erase the object safely after all selected objects are processed
+			m_sceneGraph.erase(sceneObj);  // Safe deletion without invalidating iterators
 		}
 	}
 
-	selectedIDs.clear();
+	// Rebuild the display list after deletion
+	BuildDisplayList(&m_sceneGraph);
+
+	// Clear selected objects after deletion
+	m_selectedObjects.clear();
+}
+
+void Game::GetSelectedObject(std::vector<int>& selectedIDs)
+{
+	m_selectedObjects.clear();
+
+	for (int i = 0; i < selectedIDs.size(); i++)
+	{
+		if (selectedIDs[i] <= -1)
+			continue;
+
+		auto selectedObj = std::find_if(m_displayList->begin(), m_displayList->end(),
+			[&](const DisplayObject& obj) { return obj.m_ID == selectedIDs[i]; });
+
+		if (selectedObj != m_displayList->end())
+			m_selectedObjects.push_back(&(*selectedObj));
+	}
 }

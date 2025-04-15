@@ -42,7 +42,7 @@ void SelectDialogue::SetObjectData(std::vector<SceneObject>* SceneGraph, std::ve
 	for (int i = 0; i < numSceneObjects; i++)
 	{
 		//easily possible to make the data string presented more complex. showing other columns.
-		std::wstring listBoxEntry = std::to_wstring(m_sceneGraph->at(i).ID);
+		std::wstring listBoxEntry = std::to_wstring(m_currentSelection->at(i));
 		m_listBox.AddString(listBoxEntry.c_str());
 	}
 }

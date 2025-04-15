@@ -50,28 +50,32 @@ void ObjectManipulationDialog::SetObjectData(std::vector<DisplayObject>* display
 	m_onNewSelection = true;
 
 	m_displayList = displaylist;
+
 	m_editX.SetWindowText(NULL);
 	m_editY.SetWindowText(NULL);
 	m_editZ.SetWindowText(NULL);
 
 	CString m_Xpos, m_Ypos, m_Zpos;
 	CString m_Xrot, m_Yrot, m_Zrot;
-	CString m_Xscale, m_Yscale, m_Zscale;
+	CString m_Xscale, m_Yscale, m_Zscale; 
+
 	if (m_currentSelection->size() == 1 && m_currentSelection->front() != -1)
 	{
-	
-		m_Xpos.Format(_T("%f"), m_displayList->at(m_currentSelection->front()).m_position.x);
-		m_Ypos.Format(_T("%f"), m_displayList->at(m_currentSelection->front()).m_position.y);
-		m_Zpos.Format(_T("%f"), m_displayList->at(m_currentSelection->front()).m_position.z);
+		auto selectedObj = std::find_if(m_displayList->begin(), m_displayList->end(),
+			[&](const DisplayObject& obj) { return obj.m_ID == m_currentSelection->front(); });
 
-		m_Xrot.Format(_T("%f"), m_displayList->at(m_currentSelection->front()).m_orientation.x);
-		m_Yrot.Format(_T("%f"), m_displayList->at(m_currentSelection->front()).m_orientation.y);
-		m_Zrot.Format(_T("%f"), m_displayList->at(m_currentSelection->front()).m_orientation.z);
 
-		m_Xscale.Format(_T("%f"), m_displayList->at(m_currentSelection->front()).m_scale.x);
-		m_Yscale.Format(_T("%f"), m_displayList->at(m_currentSelection->front()).m_scale.y);
-		m_Zscale.Format(_T("%f"), m_displayList->at(m_currentSelection->front()).m_scale.z);
+		m_Xpos.Format(_T("%f"), selectedObj->m_position.x);
+		m_Ypos.Format(_T("%f"), selectedObj->m_position.y);
+		m_Zpos.Format(_T("%f"), selectedObj->m_position.z);
 
+		m_Xrot.Format(_T("%f"), selectedObj->m_orientation.x);
+		m_Yrot.Format(_T("%f"), selectedObj->m_orientation.y);
+		m_Zrot.Format(_T("%f"), selectedObj->m_orientation.z);
+
+		m_Xscale.Format(_T("%f"), selectedObj->m_scale.x);
+		m_Yscale.Format(_T("%f"), selectedObj->m_scale.y);
+		m_Zscale.Format(_T("%f"), selectedObj->m_scale.z);
 
 		m_editX.SetWindowText(m_Xpos);
 		m_editY.SetWindowText(m_Ypos);
@@ -146,7 +150,7 @@ void ObjectManipulationDialog::End()
 
 void ObjectManipulationDialog::PushUndo(DisplayObject& object)
 {
-	DObjectState undoState(&object, XMFLOAT3(object.m_position), XMFLOAT3(object.m_orientation), XMFLOAT3(object.m_scale));
+	DObjectState undoState(object, object.m_ID, false);
 	m_undoStack->push(undoState);
 }
 
@@ -163,24 +167,26 @@ void ObjectManipulationDialog::ApplyObjectChange(float value, TransformType tran
 		if (m_currentSelection->at(i) == -1)
 			continue;
 
-		DisplayObject& object = m_displayList->at(m_currentSelection->at(i));
+		
+		auto object = std::find_if(m_displayList->begin(), m_displayList->end(),
+			[&](const DisplayObject& obj) { return obj.m_ID == m_currentSelection->at(i); });
 
-		PushUndo(object);
+		PushUndo(*object);
 
 		switch (transform)
 		{
-			case TransformType::PositionX:	object.m_position.x		= value; break;
-			case TransformType::PositionY:	object.m_position.y		= value; break;
-			case TransformType::PositionZ:	object.m_position.z		= value; break;
-			case TransformType::RotationX:	object.m_orientation.x	= value; break;
-			case TransformType::RotationY:	object.m_orientation.y	= value; break;
-			case TransformType::RotationZ:	object.m_orientation.z	= value; break;
-			case TransformType::ScaleX:		object.m_scale.x		= value; break;
-			case TransformType::ScaleY:		object.m_scale.y		= value; break;
-			case TransformType::ScaleZ:		object.m_scale.z		= value; break;
+			case TransformType::PositionX:	object->m_position.x	= value; break;
+			case TransformType::PositionY:	object->m_position.y	= value; break;
+			case TransformType::PositionZ:	object->m_position.z	= value; break;
+			case TransformType::RotationX:	object->m_orientation.x	= value; break;
+			case TransformType::RotationY:	object->m_orientation.y	= value; break;
+			case TransformType::RotationZ:	object->m_orientation.z	= value; break;
+			case TransformType::ScaleX:		object->m_scale.x		= value; break;
+			case TransformType::ScaleY:		object->m_scale.y		= value; break;
+			case TransformType::ScaleZ:		object->m_scale.z		= value; break;
 		}
 
-		PushUndo(object);
+		PushUndo(*object);
 	}
 }
 

@@ -51,6 +51,7 @@ public:
 
 	//tool specific
 	void BuildDisplayList(std::vector<SceneObject> * SceneGraph); //note vector passed by reference 
+	void BuildDisplayObject(SceneObject* SceneObject);
 	void BuildDisplayChunk(ChunkObject *SceneChunk);
 	void SaveDisplayChunk(ChunkObject *SceneChunk);	//saves geometry et al
 	void ClearDisplayList();
@@ -59,12 +60,14 @@ public:
 	void MoveObjects(std::vector<int>& selectedIDs);
 	void RotateObjects(std::vector<int>& selectedIDs);
 	void ScaleObjects(std::vector<int>& selectedIDs);
-	void Undo(std::stack<DObjectState>* undoStack, std::stack<DObjectState>* redoStack);
-	void Redo(std::stack<DObjectState>* redoStack, std::stack<DObjectState>* undoStack);
+	void Undo(std::stack<DObjectState>* undoStack, std::stack<DObjectState>* redoStack, std::vector<SceneObject>& sceneGraph);
+	void Redo(std::stack<DObjectState>* redoStack, std::stack<DObjectState>* undoStack, std::vector<SceneObject>& sceneGraph);
 	void Copy(std::vector<int>& selectedIDs, std::vector<SceneObject>& copiedObjects, std::vector<SceneObject>& m_sceneGraph);
 	void Paste(std::vector<SceneObject>& copiedObjects, std::vector<SceneObject>& m_sceneGraph);
 	void Delete(std::vector<int>& selectedIDs, std::vector<SceneObject>& m_sceneGraph);
 
+
+	void GetSelectedObject(std::vector<int>& selectedIDs);
 #ifdef DXTK_AUDIO
 	void NewAudioDevice();
 #endif  
@@ -81,6 +84,7 @@ private:
 
 	//tool specific
 	std::vector<DisplayObject>*			m_displayList;
+	std::vector<DisplayObject*>			m_selectedObjects;
 	DisplayChunk						m_displayChunk;
 	InputCommands						m_InputCommands;
 	Camera								m_Camera;

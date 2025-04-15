@@ -329,7 +329,8 @@ void ToolMain::Tick(MSG *msg)
 						break;
 
 					DisplayObject& object = m_displayList[m_selectedObject[i]];
-					DObjectState undoState(&object, XMFLOAT3(object.m_position), XMFLOAT3(object.m_orientation), XMFLOAT3(object.m_scale));
+					//DObjectState undoState(&object, object, object.m_ID, XMFLOAT3(object.m_position), XMFLOAT3(object.m_orientation), XMFLOAT3(object.m_scale), false);
+					DObjectState undoState(object, object.m_ID, false);
 					m_undoStack.push(undoState);
 				}
 				m_objManipHeld = true;
@@ -350,7 +351,8 @@ void ToolMain::Tick(MSG *msg)
 					break;
 
 				DisplayObject& object = m_displayList[m_selectedObject[i]];
-				DObjectState undoState(&object, XMFLOAT3(object.m_position), XMFLOAT3(object.m_orientation), XMFLOAT3(object.m_scale));
+				//DObjectState undoState(&object, object, object.m_ID, XMFLOAT3(object.m_position), XMFLOAT3(object.m_orientation), XMFLOAT3(object.m_scale), false);
+				DObjectState undoState(object, object.m_ID, false);
 				m_undoStack.push(undoState);
 			}
 			m_objManipHeld = false;
@@ -360,14 +362,14 @@ void ToolMain::Tick(MSG *msg)
 
 	if (m_toolInputCommands->undoDown && !m_toolInputCommands->undoDownPrevState)
 	{
-		m_d3dRenderer.Undo(&m_undoStack, &m_redoStack);
+		m_d3dRenderer.Undo(&m_undoStack, &m_redoStack, m_sceneGraph);
 		m_ToolObjectManipDialog->SetStacks(&m_undoStack, &m_redoStack);
 	}
 		m_toolInputCommands->undoDownPrevState = m_toolInputCommands->undoDown;
 
 	if (m_toolInputCommands->redoDown && !m_toolInputCommands->redoDownPrevState)
 	{
-		m_d3dRenderer.Redo(&m_redoStack, &m_undoStack);
+		m_d3dRenderer.Redo(&m_redoStack, &m_undoStack, m_sceneGraph);
 		m_ToolObjectManipDialog->SetStacks(&m_undoStack, &m_redoStack);
 	}
 		m_toolInputCommands->redoDownPrevState = m_toolInputCommands->redoDown;
@@ -389,6 +391,7 @@ void ToolMain::Tick(MSG *msg)
 	if (m_toolInputCommands->deleteDown)
 	{
 		m_d3dRenderer.Delete(m_selectedObject, m_sceneGraph);
+		m_selectedObject.clear();
 	}
 	if (IsWindow(m_ToolObjectManipDialog->GetSafeHwnd()))  // Ensure the window exists
 	{

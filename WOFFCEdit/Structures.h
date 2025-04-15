@@ -9,33 +9,59 @@ using namespace DirectX::SimpleMath;
 
 struct DObjectState
 {
-	DisplayObject* m_objPtr;  
+	DisplayObject m_displayRef;
+	SceneObject m_sceneRef;
+	int m_ID;
+	bool m_isNewObject = false;
+
+	DObjectState(const DisplayObject& displayRef, SceneObject sceneRef, int ID, bool newObject)
+	{
+		m_displayRef = displayRef;
+		m_sceneRef = sceneRef;
+		m_ID = ID;
+		m_isNewObject = newObject;
+
+	}
+
+	// Constructor WITHOUT SceneObject
+	DObjectState(const DisplayObject& displayRef, int ID, bool newObject)
+	{
+		m_displayRef = displayRef;
+
+		m_ID = ID;
+		m_isNewObject = newObject;
+	}
+	/*DisplayObject* m_objPtr;   //// change name
+	DisplayObject m_objectData;
+	SceneObject m_sceneObjref;
+	int m_ID;
 	float m_posX, m_posY, m_posZ;
 	float m_rotX, m_rotY, m_rotZ;
 	float m_scaleX, m_scaleY, m_scaleZ;
-	
-	DObjectState(DisplayObject* objptr, XMFLOAT3 pos, XMFLOAT3 rot, XMFLOAT3 scale)
+	bool m_isNewObject;
+
+	DObjectState(DisplayObject* objptr, DisplayObject objData, int ID, XMFLOAT3 pos, XMFLOAT3 rot, XMFLOAT3 scale, bool newFlag)
 	{
 		m_objPtr = objptr;
+		m_objectData = objData;
+		m_ID = ID;
 		m_posX = pos.x, m_posY = pos.y, m_posZ = pos.z;
 		m_rotX = rot.x, m_rotY = rot.y, m_rotZ = rot.z;
 		m_scaleX = scale.x, m_scaleY = scale.y, m_scaleZ = scale.z;
+		m_isNewObject = newFlag;
 	}
+	DObjectState(DisplayObject* objptr, DisplayObject objData, SceneObject sceneObjref, int ID, XMFLOAT3 pos, XMFLOAT3 rot, XMFLOAT3 scale, bool newFlag)
+	{
+		m_objPtr = objptr;
+		m_objectData = objData;
+		m_sceneObjref = sceneObjref;
+		m_ID = ID;
+		m_posX = pos.x, m_posY = pos.y, m_posZ = pos.z;
+		m_rotX = rot.x, m_rotY = rot.y, m_rotZ = rot.z;
+		m_scaleX = scale.x, m_scaleY = scale.y, m_scaleZ = scale.z;
+		m_isNewObject = newFlag;
+	}*/
 
-	bool operator==(const DObjectState& comparison) const {
-
-		return (m_objPtr == comparison.m_objPtr &&
-			m_posX == comparison.m_posX		&& m_posY == comparison.m_posY		&& m_posZ == comparison.m_posZ &&
-			m_rotX == comparison.m_rotX		&& m_rotY == comparison.m_rotY		&& m_rotZ == comparison.m_rotZ &&
-			m_scaleX == comparison.m_scaleX && m_scaleY == comparison.m_scaleY	&& m_scaleZ == comparison.m_scaleZ);
-	}
-	bool operator!=(const DObjectState& comparison) const {
-
-		return (m_objPtr != comparison.m_objPtr &&
-			m_posX != comparison.m_posX && m_posY != comparison.m_posY && m_posZ != comparison.m_posZ &&
-			m_rotX != comparison.m_rotX && m_rotY != comparison.m_rotY && m_rotZ != comparison.m_rotZ &&
-			m_scaleX != comparison.m_scaleX && m_scaleY != comparison.m_scaleY && m_scaleZ != comparison.m_scaleZ);
-	}
 };
 
 enum TransformType
