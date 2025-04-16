@@ -65,9 +65,12 @@ public:
 	void Copy(std::vector<int>& selectedIDs, std::vector<SceneObject>& copiedObjects, std::vector<SceneObject>& m_sceneGraph);
 	void Paste(std::vector<SceneObject>& copiedObjects, std::vector<SceneObject>& m_sceneGraph);
 	void Delete(std::vector<int>& selectedIDs, std::vector<SceneObject>& m_sceneGraph);
-
+	void FocusOnObject(std::vector<int>& selectedIDs);
 
 	void GetSelectedObject(std::vector<int>& selectedIDs);
+
+	Camera* GetCamerea()								{ return &m_Camera; };
+	std::vector<DisplayObject*>& GetSelectedObjects()	{ return m_selectedObjects; };
 #ifdef DXTK_AUDIO
 	void NewAudioDevice();
 #endif  
@@ -81,7 +84,7 @@ private:
 
 	void XM_CALLCONV DrawGrid(DirectX::FXMVECTOR xAxis, DirectX::FXMVECTOR yAxis, DirectX::FXMVECTOR origin, size_t xdivs, size_t ydivs, DirectX::GXMVECTOR color);
 
-
+	ID3D11ShaderResourceView*			m_highlightTexture;
 	//tool specific
 	std::vector<DisplayObject>*			m_displayList;
 	std::vector<DisplayObject*>			m_selectedObjects;

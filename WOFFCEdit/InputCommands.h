@@ -39,6 +39,8 @@ struct InputCommands
 	bool v_key_down;
 	bool v_key_prev;
 
+	bool f_key_down;
+	bool focus_prev; 
 	int editMode;
 
 };

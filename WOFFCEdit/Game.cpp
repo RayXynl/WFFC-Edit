@@ -28,7 +28,8 @@ Game::Game()
 	m_grid = false;
 
 
-
+	HRESULT rs;
+	rs = CreateDDSTextureFromFile(m_deviceResources->GetD3DDevice(), L"highlight.png", nullptr, &m_highlightTexture);
 }
 
 Game::~Game()
@@ -183,9 +184,6 @@ void Game::Render()
 	//CAMERA POSITION ON HUD
 	m_sprites->Begin();
 	WCHAR   Buffer[256];
-	std::wstring var = L"Cam X: " + std::to_wstring(m_Camera.GetPosition().x) + L"Cam Z: " + std::to_wstring(m_Camera.GetPosition().z);
-	m_font->DrawString(m_sprites.get(), var.c_str() , XMFLOAT2(100, 10), Colors::Yellow);
-	m_sprites->End();
 
 	//RENDER OBJECTS FROM SCENEGRAPH
 	int numRenderObjects = m_displayList->size();
@@ -202,8 +200,52 @@ void Game::Render()
 
 		XMMATRIX local = m_world * XMMatrixTransformation(g_XMZero, Quaternion::Identity, scale, g_XMZero, rotate, translate);
 
-		m_displayList->at(i).m_model->Draw(context, *m_states, local, m_Camera.GetViewMatrix(), m_projection, false);	//last variable in draw,  make TRUE for wireframe
+		m_displayList->at(i).m_model->Draw(context, *m_states, local, m_Camera.GetViewMatrix(), m_projection, false);
 
+		bool selected = std::find(selectedID.begin(), selectedID.end(), m_displayList->at(i).m_ID) != selectedID.end();
+		//////// NEW Feature comment on THIS ||||||||||||||||||||||||||||||||
+		if (selected)
+		{
+			XMVECTORF32 highlightScale = {
+				m_displayList->at(i).m_scale.x * 1.06f,
+				m_displayList->at(i).m_scale.y * 1.06f,
+				m_displayList->at(i).m_scale.z * 1.06f
+			};
+
+			
+			XMMATRIX highlightLocal = m_world * XMMatrixTransformation(
+				g_XMZero, Quaternion::Identity, highlightScale, g_XMZero, rotate, translate
+			);
+
+
+			m_displayList->at(i).m_model->UpdateEffects([&](IEffect* effect)
+				{
+					auto basicEffect = dynamic_cast<BasicEffect*>(effect);
+					if (basicEffect)
+					{
+					
+						basicEffect->SetDiffuseColor(Colors::White);
+						basicEffect->SetEmissiveColor(Colors::White);
+					}
+				});
+
+		
+			m_displayList->at(i).m_model->Draw(context, *m_states, highlightLocal, m_Camera.GetViewMatrix(), m_projection, false);
+
+		}
+		else
+		{
+		
+			m_displayList->at(i).m_model->UpdateEffects([&](IEffect* effect)
+				{
+					auto basicEffect = dynamic_cast<BasicEffect*>(effect);
+					if (basicEffect)
+					{
+						basicEffect->SetDiffuseColor(Colors::White);
+						basicEffect->SetEmissiveColor(Colors::Black);
+					}
+				});
+		}
 		m_deviceResources->PIXEndEvent();
 	}
     m_deviceResources->PIXEndEvent();
@@ -216,6 +258,11 @@ void Game::Render()
 
 	//Render the batch,  This is handled in the Display chunk becuase it has the potential to get complex
 	m_displayChunk.RenderBatch(m_deviceResources);
+
+	std::wstring var = L"Cam X: " + std::to_wstring(m_Camera.GetPosition().x) + L" Cam Z: " + std::to_wstring(m_Camera.GetPosition().z);
+	m_font->DrawString(m_sprites.get(), var.c_str(), XMFLOAT2(100, 10), Colors::Yellow);
+	m_sprites->End();
+
 
     m_deviceResources->Present();
 }
@@ -358,6 +405,7 @@ void Game::BuildDisplayList(std::vector<SceneObject> * SceneGraph)
 		{
 			CreateDDSTextureFromFile(device, L"database/data/Error.dds", nullptr, &newDisplayObject.m_texture_diffuse);	//load tex into Shader resource
 		}
+
 
 		//apply new texture to models effect
 		newDisplayObject.m_model->UpdateEffects([&](IEffect* effect) //This uses a Lambda function,  if you dont understand it: Look it up.
@@ -1001,7 +1049,6 @@ void Game::Delete(std::vector<int>& selectedIDs, std::vector<SceneObject>& m_sce
 
 	GetSelectedObject(selectedIDs);
 
-	// Collect the scene objects to delete, without erasing during iteration
 	for (int i = 0; i < m_selectedObjects.size(); i++)
 	{
 		DisplayObject& object = *m_selectedObjects[i];
@@ -1009,23 +1056,43 @@ void Game::Delete(std::vector<int>& selectedIDs, std::vector<SceneObject>& m_sce
 		auto sceneObj = std::find_if(m_sceneGraph.begin(), m_sceneGraph.end(),
 			[&](const SceneObject& obj) { return obj.ID == object.m_ID; });
 
-		// Only add the scene objects to the undo stack if found
+		
 		if (sceneObj != m_sceneGraph.end())
 		{
 			DObjectState undoState(object, *sceneObj, object.m_ID, true);
 			m_undoStack->push(undoState);
 			m_undoStack->push(undoState);
 
-			// Erase the object safely after all selected objects are processed
-			m_sceneGraph.erase(sceneObj);  // Safe deletion without invalidating iterators
+		
+			m_sceneGraph.erase(sceneObj);  
 		}
 	}
 
-	// Rebuild the display list after deletion
+	
 	BuildDisplayList(&m_sceneGraph);
 
-	// Clear selected objects after deletion
 	m_selectedObjects.clear();
+}
+
+void Game::FocusOnObject(std::vector<int>& selectedIDs)
+{
+	if (selectedIDs.empty() || selectedIDs[0] == -1 || m_displayList->empty())
+		return;
+
+	GetSelectedObject(selectedIDs);
+
+	DirectX::SimpleMath::Vector3 cumulativePos = { 0.f, 0.f, 0.f };
+
+	for (int i = 0; i < m_selectedObjects.size(); i++)
+	{
+		DisplayObject* object = m_selectedObjects[i];
+
+		cumulativePos += object->m_position;
+	}
+
+	cumulativePos /= m_selectedObjects.size();
+
+	m_Camera.FocusOnObject(cumulativePos, 10.f);
 }
 
 void Game::GetSelectedObject(std::vector<int>& selectedIDs)

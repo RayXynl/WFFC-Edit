@@ -65,6 +65,9 @@ void ToolMain::onActionInitialise(HWND handle, int width, int height, ObjectMani
 	m_toolInputCommands->undoDown = false;
 	m_toolInputCommands->undoDownPrevState = false;
 
+
+	m_toolInputCommands->focus_prev = false;
+
 	m_toolInputCommands->editMode = CameraMove;
 
 	onActionLoad();
@@ -323,12 +326,14 @@ void ToolMain::Tick(MSG *msg)
 		{
 			if (!m_objManipHeld)
 			{
-				for (int i = 0; i < m_selectedObject.size(); i++)
+				m_d3dRenderer.GetSelectedObject(m_selectedObject);
+				for (int i = 0; i < m_d3dRenderer.GetSelectedObjects().size(); i++)
 				{
 					if (m_selectedObject[i] == -1)
 						break;
 
-					DisplayObject& object = m_displayList[m_selectedObject[i]];
+					
+					DisplayObject& object = *m_d3dRenderer.GetSelectedObjects()[i];
 					//DObjectState undoState(&object, object, object.m_ID, XMFLOAT3(object.m_position), XMFLOAT3(object.m_orientation), XMFLOAT3(object.m_scale), false);
 					DObjectState undoState(object, object.m_ID, false);
 					m_undoStack.push(undoState);
@@ -387,6 +392,12 @@ void ToolMain::Tick(MSG *msg)
 	}
 		m_toolInputCommands->v_key_prev = m_toolInputCommands->v_key_down;
 
+
+	if (m_toolInputCommands->f_key_down && !m_toolInputCommands->focus_prev)
+	{
+		m_d3dRenderer.FocusOnObject(m_selectedObject);
+	}
+		m_toolInputCommands->focus_prev = m_toolInputCommands->f_key_down;
 
 	if (m_toolInputCommands->deleteDown)
 	{
@@ -470,6 +481,8 @@ void ToolMain::UpdateInput(MSG * msg)
 	if (m_keyArray['V'])	m_toolInputCommands->v_key_down = true;
 	else					m_toolInputCommands->v_key_down = false;
 
+	if (m_keyArray['F'])	m_toolInputCommands->f_key_down = true;
+	else					m_toolInputCommands->f_key_down = false;
 
 	if (m_keyArray[VK_CONTROL]) m_toolInputCommands->ctrlDown = true;
 	else						m_toolInputCommands->ctrlDown = false;
