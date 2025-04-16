@@ -7,6 +7,7 @@
 #include "SceneObject.h"
 #include "InputCommands.h"
 #include "ObjectManipulationDialog.h"
+#include "ObjectionCreationDialog.h"
 #include <vector>
 #include <stack>
 #include "Structures.h"
@@ -18,7 +19,7 @@ public: //methods
 	~ToolMain();
 
 	//onAction - These are the interface to MFC
-	void	onActionInitialise(HWND handle, int width, int height, ObjectManipulationDialog* objectDialogRef, InputCommands* toolInputCommands);			//Passes through handle and hieght and width and initialises DirectX renderer and SQL LITE
+	void	onActionInitialise(HWND handle, int width, int height, ObjectManipulationDialog* objectDialogRef, ObjectionCreationDialog* objectCreateRef, InputCommands* toolInputCommands);			//Passes through handle and hieght and width and initialises DirectX renderer and SQL LITE
 	void	onActionFocusCamera();
 	void	onActionLoad();													//load the current chunk
 	std::vector<int>		getCurrentSelectionID();						//returns the selection number of currently selected object so that It can be displayed.
@@ -54,7 +55,7 @@ private:	//variables
 	int							m_currentChunk;			//the current chunk of thedatabase that we are operating on.  Dictates loading and saving. 
 	
 	ObjectManipulationDialog*	m_ToolObjectManipDialog;
-
+	ObjectionCreationDialog*	m_ToolObjectCreationDialog;	
 	
 
 	std::stack<DObjectState>	m_undoStack;

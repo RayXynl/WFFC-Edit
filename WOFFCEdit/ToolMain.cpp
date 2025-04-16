@@ -27,12 +27,13 @@ std::vector<int> ToolMain::getCurrentSelectionID()
 	return m_selectedObject;
 }
 
-void ToolMain::onActionInitialise(HWND handle, int width, int height, ObjectManipulationDialog* objectDialogRef, InputCommands* toolInputCommands)
+void ToolMain::onActionInitialise(HWND handle, int width, int height, ObjectManipulationDialog* objectDialogRef, ObjectionCreationDialog* objectCreateRef, InputCommands* toolInputCommands)
 {
 	//window size, handle etc for directX
 	m_width		= width;
 	m_height	= height;
 	m_ToolObjectManipDialog = objectDialogRef;
+	m_ToolObjectCreationDialog = objectCreateRef;
 	m_toolInputCommands = toolInputCommands;
 	m_d3dRenderer.Initialize(handle, m_width, m_height, &m_displayList, &m_redoStack, &m_undoStack);
 
@@ -327,14 +328,13 @@ void ToolMain::Tick(MSG *msg)
 			if (!m_objManipHeld)
 			{
 				m_d3dRenderer.GetSelectedObject(m_selectedObject);
+
 				for (int i = 0; i < m_d3dRenderer.GetSelectedObjects().size(); i++)
 				{
 					if (m_selectedObject[i] == -1)
 						break;
 
-					
 					DisplayObject& object = *m_d3dRenderer.GetSelectedObjects()[i];
-					//DObjectState undoState(&object, object, object.m_ID, XMFLOAT3(object.m_position), XMFLOAT3(object.m_orientation), XMFLOAT3(object.m_scale), false);
 					DObjectState undoState(object, object.m_ID, false);
 					m_undoStack.push(undoState);
 				}
@@ -350,13 +350,12 @@ void ToolMain::Tick(MSG *msg)
 		}
 		else if (m_objManipHeld)
 		{
-			for (int i = 0; i < m_selectedObject.size(); i++)
+			for (int i = 0; i < m_d3dRenderer.GetSelectedObjects().size(); i++)
 			{
 				if (m_selectedObject[i] == -1)
 					break;
 
-				DisplayObject& object = m_displayList[m_selectedObject[i]];
-				//DObjectState undoState(&object, object, object.m_ID, XMFLOAT3(object.m_position), XMFLOAT3(object.m_orientation), XMFLOAT3(object.m_scale), false);
+				DisplayObject& object = *m_d3dRenderer.GetSelectedObjects()[i];
 				DObjectState undoState(object, object.m_ID, false);
 				m_undoStack.push(undoState);
 			}
@@ -378,7 +377,6 @@ void ToolMain::Tick(MSG *msg)
 		m_ToolObjectManipDialog->SetStacks(&m_undoStack, &m_redoStack);
 	}
 		m_toolInputCommands->redoDownPrevState = m_toolInputCommands->redoDown;
-
 
 	if (m_toolInputCommands->c_key_down && !m_toolInputCommands->c_key_prev)
 	{
@@ -404,6 +402,19 @@ void ToolMain::Tick(MSG *msg)
 		m_d3dRenderer.Delete(m_selectedObject, m_sceneGraph);
 		m_selectedObject.clear();
 	}
+
+	if (m_ToolObjectCreationDialog->GetObjectCreationFlag())
+	{
+		m_d3dRenderer.BuildDisplayList(&m_sceneGraph);
+		DisplayObject& object = m_displayList.back();
+
+		DObjectState undoState(object, m_sceneGraph.back(), m_sceneGraph.back().ID, true);
+		m_undoStack.push(undoState);
+		m_undoStack.push(undoState);
+		m_ToolObjectCreationDialog->SetObjectCreationFlag(false);
+	}
+
+
 	if (IsWindow(m_ToolObjectManipDialog->GetSafeHwnd()))  // Ensure the window exists
 	{
 		if (m_toolInputCommands->editMode == ModelMove || 

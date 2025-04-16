@@ -27,7 +27,6 @@ public:
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	afx_msg void End();		//kill the dialogue
-	//afx_msg void Select();	//Item has been selected
 
 	std::vector<SceneObject>*	m_sceneGraph;
 	std::vector<int>*			m_currentSelection;
@@ -54,7 +53,7 @@ public:
 	
 	virtual void PostNcDestroy();
 	afx_msg void OnBnClickedOk();
-	afx_msg void OnLbnSelchangeList1();
+//	afx_msg void OnLbnSelchangeList1();
 	afx_msg void OnEnChangeEditX();
 	afx_msg void OnEnChangeEditY();
 	afx_msg void OnEnChangeEditZ();
@@ -65,7 +64,7 @@ public:
 	afx_msg void OnEnChangeScaleY();
 	afx_msg void OnEnChangeScaleZ();
 	afx_msg void OnBnClickedFreemoveloc();
-	afx_msg void OnBnClickedFreemoveloc2();
+	//afx_msg void OnBnClickedFreemoveloc2();
 	afx_msg void OnBnClickedFreemoverot();
 	afx_msg void OnBnClickedFreemovescale();
 };

@@ -463,7 +463,6 @@ void Game::BuildDisplayObject(SceneObject* SceneObject)
 	auto device = m_deviceResources->GetD3DDevice();
 	auto devicecontext = m_deviceResources->GetD3DDeviceContext();
 
-
 	//create a temp display object that we will populate then append to the display list.
 	DisplayObject newDisplayObject;
 
@@ -856,6 +855,7 @@ void Game::Undo(std::stack<DObjectState>* undoStack, std::stack<DObjectState>* r
 				{
 					if (i == 0)
 						sceneGraph.erase(sceneObj);		
+					i++;
 				}
 				else
 				{
@@ -882,8 +882,8 @@ void Game::Undo(std::stack<DObjectState>* undoStack, std::stack<DObjectState>* r
 
 					sceneGraph.push_back(newObject);
 				
-					BuildDisplayList(&sceneGraph);
 				}
+				BuildDisplayList(&sceneGraph);
 
 				redoStack->push(topState);
 				undoStack->pop();

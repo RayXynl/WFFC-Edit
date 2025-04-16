@@ -65,6 +65,7 @@
     <ClCompile Include="ObjectManipulationDialog.cpp">
       <Filter>MFC</Filter>
     </ClCompile>
+    <ClCompile Include="ObjectionCreationDialog.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DeviceResources.h">
@@ -123,6 +124,7 @@
     <ClInclude Include="Structures.h">
       <Filter>Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="ObjectionCreationDialog.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
