@@ -54,10 +54,9 @@ private:	//variables
 	int							m_height;
 	int							m_currentChunk;			//the current chunk of thedatabase that we are operating on.  Dictates loading and saving. 
 	
-	ObjectManipulationDialog*	m_ToolObjectManipDialog;
-	ObjectionCreationDialog*	m_ToolObjectCreationDialog;	
+	ObjectManipulationDialog*	m_ToolObjectManipDialog;		// dialog for manipulating objects
+	ObjectionCreationDialog*	m_ToolObjectCreationDialog;		// dialog for creating objects
 	
-
-	std::stack<DObjectState>	m_undoStack;
-	std::stack<DObjectState>	m_redoStack;
+	std::stack<DObjectState>	m_undoStack;					// undo stack
+	std::stack<DObjectState>	m_redoStack;					// redo stack
 };

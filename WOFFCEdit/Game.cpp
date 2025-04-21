@@ -706,10 +706,8 @@ std::vector<int> Game::MousePicking(bool multiSelect)
 
 		float closestDist = FLT_MAX;
 	
-		//loop through mesh list for object
 		for (int y = 0; y < m_displayList->at(i).m_model.get()->meshes.size(); y++)
 		{
-			//checking for ray intersection
 			if (m_displayList->at(i).m_model.get()->meshes[y]->boundingBox.Intersects(nearPoint, pickingVector, pickedDistance))
 			{
 				if (pickedDistance < closestDist)
@@ -721,143 +719,141 @@ std::vector<int> Game::MousePicking(bool multiSelect)
 		}
 	}
 
-	if (selected != -1)
+	if (selected != -1)									// if selected object is valid
 	{
-		if (!selectedID.empty())
+		if (!selectedID.empty())						// check if selectedID vector is empty 
 		{
-			if (selectedID[0] == -1)
-			{
-				selectedID.clear();
-			}
+			if (selectedID[0] == -1)					// if first element is invalid object
+				selectedID.clear();						// clear vector 
 		}
-		if (multiSelect)
+		if (multiSelect)								// if multiple objects are being selected
 		{
-			auto it = std::find(selectedID.begin(), selectedID.end(), selected);
-			if (it == selectedID.end())
-				selectedID.push_back(selected);
-			else if (it != selectedID.end())
-				selectedID.erase(it);
+			auto it = std::find(selectedID.begin(), selectedID.end(), selected);	// check if current selected object has already been selected
+			if (it == selectedID.end())												// if object has not been selected
+				selectedID.push_back(selected);										// add to selected vector
+			else if (it != selectedID.end())										// if object has alreayd been selected
+				selectedID.erase(it);												// remove from selected vector	
 			else
-				selectedID.clear();
+				selectedID.clear();													// clear vector
 		}
 		else
 		{
-			selectedID.clear();
-			selectedID.push_back(selected);
+			selectedID.clear();														// clear vector
+			selectedID.push_back(selected);											// push selected object ID
 		}
 	}
 	else
 	{
-		selectedID.clear();
-		selectedID.push_back(-1);
+		selectedID.clear();															// clear selected ID vector
+		selectedID.push_back(-1);													// push -1 as no object selection has been made
 	}
 
-	//if we got a hit.  return it.  
-	return selectedID;
+	return selectedID;																// return selected object IDs vector
 }
 
 void Game::MoveObjects(std::vector<int>& selectedIDs)
 {
-	if (selectedIDs.empty())
-		return;
+	if (selectedIDs.empty())				// If selectedID vector is empty
+		return;								// return from function
 
-	if (selectedIDs[0] <= -1)
-		return;
-
-	if (m_displayList->empty())
-		return;
+	if (selectedIDs[0] <= -1)				// if first element in selectdID vector is invalid selection
+		return;								// return from function	
+		
+	if (m_displayList->empty())				// if display list is empty
+		return;								// return from function
 	
-	GetSelectedObject(selectedIDs);
+	GetSelectedObject(selectedIDs);			// Get selected objects
 
-	for (int i = 0; i < m_selectedObjects.size(); i++)
+	for (int i = 0; i < m_selectedObjects.size(); i++)					// Loop through selected objects
 	{
-		DisplayObject* object = m_selectedObjects[i];
+		DisplayObject* object = m_selectedObjects[i];					// get selected object
 
-		if (m_InputCommands.forward)	object->m_position.z += 0.1f;
-		if (m_InputCommands.back)		object->m_position.z -= 0.1f;
-		if (m_InputCommands.left)		object->m_position.x += 0.1f;
-		if (m_InputCommands.right)		object->m_position.x -= 0.1f;
-		if (m_InputCommands.up)			object->m_position.y += 0.1f;
-		if (m_InputCommands.down)		object->m_position.y -= 0.1f;
+		if (m_InputCommands.forward)	object->m_position.z += 0.1f;	// move object forward
+		if (m_InputCommands.back)		object->m_position.z -= 0.1f;	// move object back
+		if (m_InputCommands.left)		object->m_position.x += 0.1f;	// move object left
+		if (m_InputCommands.right)		object->m_position.x -= 0.1f;	// move object right
+		if (m_InputCommands.up)			object->m_position.y += 0.1f;	// move object up
+		if (m_InputCommands.down)		object->m_position.y -= 0.1f;	// move object down
 	}
 }
 
 void Game::RotateObjects(std::vector<int>& selectedIDs)
 {
-	if (selectedIDs.empty())
-		return;
+	if (selectedIDs.empty())				// If selectedID vector is empty
+		return;								// return from function
 
-	if (selectedIDs[0] <= -1)
-		return;
+	if (selectedIDs[0] <= -1)				// if first element in selectdID vector is invalid selection
+		return;								// return from function	
 
-	if (m_displayList->empty())
-		return;
+	if (m_displayList->empty())				// if display list is empty
+		return;								// return from function
 
-	GetSelectedObject(selectedIDs);
+	GetSelectedObject(selectedIDs);			// Get selected objects
 
-	for (int i = 0; i < m_selectedObjects.size(); i++)
+	for (int i = 0; i < m_selectedObjects.size(); i++) // Loop through selected objects
 	{
-		DisplayObject* object = m_selectedObjects[i];
+		DisplayObject* object = m_selectedObjects[i];		// get current object
 
-		if (m_InputCommands.forward)	object->m_orientation.z -= 0.5f;
-		if (m_InputCommands.back)		object->m_orientation.z += 0.5f;
-		if (m_InputCommands.left)		object->m_orientation.x -= 0.5f;
-		if (m_InputCommands.right)		object->m_orientation.x += 0.5f;
-		if (m_InputCommands.up)			object->m_orientation.y -= 0.5f;
-		if (m_InputCommands.down)		object->m_orientation.y += 0.5f;
+		if (m_InputCommands.forward)	object->m_orientation.z -= 0.5f;	// rotate object around z axis
+		if (m_InputCommands.back)		object->m_orientation.z += 0.5f;	// rotate object around z axis
+		if (m_InputCommands.left)		object->m_orientation.x -= 0.5f;	// rotate object around x axis
+		if (m_InputCommands.right)		object->m_orientation.x += 0.5f;	// rotate object around x axis
+		if (m_InputCommands.up)			object->m_orientation.y -= 0.5f;	// rotate object around y axis
+		if (m_InputCommands.down)		object->m_orientation.y += 0.5f;	// rotate object around y axis
 	}
 }
 
 void Game::ScaleObjects(std::vector<int>& selectedIDs)
 {
-	if (selectedIDs.empty())
-		return;
+	if (selectedIDs.empty())				// If selectedID vector is empty
+		return;								// return from function
 
-	if (selectedIDs[0] <= -1)
-		return;
+	if (selectedIDs[0] <= -1)				// if first element in selectdID vector is invalid selection
+		return;								// return from function	
 
-	if (m_displayList->empty())
-		return;
+	if (m_displayList->empty())				// if display list is empty
+		return;								// return from function
 
-	GetSelectedObject(selectedIDs);
 
-	for (int i = 0; i < m_selectedObjects.size(); i++)
+	GetSelectedObject(selectedIDs);			// Get selected objects
+
+	for (int i = 0; i < m_selectedObjects.size(); i++)		// Loop through selected objects
 	{
-		DisplayObject* object = m_selectedObjects[i];
+		DisplayObject* object = m_selectedObjects[i];		// Get current object
 
-		if (object->m_scale.x < 0.0f)	object->m_scale.x *= -1.f;
-		if (object->m_scale.y < 0.0f)	object->m_scale.y *= -1.f;
-		if (object->m_scale.z < 0.0f)	object->m_scale.z *= -1.f;
+		if (object->m_scale.x < 0.0f)	object->m_scale.x *= -1.f; // prevent negative scale
+		if (object->m_scale.y < 0.0f)	object->m_scale.y *= -1.f; // prevent negative scale
+		if (object->m_scale.z < 0.0f)	object->m_scale.z *= -1.f; // prevent negative scale
 
-		if (m_InputCommands.forward)	object->m_scale.z += 0.1f;
-		if (m_InputCommands.back)		object->m_scale.z -= 0.1f;
-		if (m_InputCommands.left)		object->m_scale.x -= 0.1f;
-		if (m_InputCommands.right)		object->m_scale.x += 0.1f;
-		if (m_InputCommands.up)			object->m_scale.y += 0.1f;
-		if (m_InputCommands.down)		object->m_scale.y -= 0.1f;
+		if (m_InputCommands.forward)	object->m_scale.z += 0.1f;	// scale object in z plane
+		if (m_InputCommands.back)		object->m_scale.z -= 0.1f;	// scale object in z plane
+		if (m_InputCommands.left)		object->m_scale.x -= 0.1f;	// scale object in x plane
+		if (m_InputCommands.right)		object->m_scale.x += 0.1f;	// scale object in x plane
+		if (m_InputCommands.up)			object->m_scale.y += 0.1f;	// scale object in y plane
+		if (m_InputCommands.down)		object->m_scale.y -= 0.1f;	// scale object in y plane
 	}
 }
 
 void Game::Undo(std::stack<DObjectState>* undoStack, std::stack<DObjectState>* redoStack, std::vector<SceneObject>& sceneGraph)
 {
-	if (!undoStack->empty())
+	if (!undoStack->empty())						// if undo stack is not mempty
 	{
 		for (int i = 0; i < 2; i++)
 		{
-			DObjectState& topState = undoStack->top();
+			DObjectState& topState = undoStack->top();		// Get last state to undo 
 
-			if (topState.m_isNewObject) 
+			if (topState.m_isNewObject)						// Check if object is new
 			{
-				auto sceneObj = std::find_if(sceneGraph.begin(), sceneGraph.end(),
+				auto sceneObj = std::find_if(sceneGraph.begin(), sceneGraph.end(),		// find object in scene graph
 					[&](const SceneObject& obj) { return obj.ID == topState.m_ID; });
 
-				if (sceneObj != sceneGraph.end())
+				if (sceneObj != sceneGraph.end())			// if object is in scene graph
 				{
 					if (i == 0)
-						sceneGraph.erase(sceneObj);		
+						sceneGraph.erase(sceneObj);			// remove object from scene graph
 					i++;
 				}
-				else
+				else                                        // else create new object and to scene graph
 				{
 					SceneObject newObject;
 
@@ -883,33 +879,33 @@ void Game::Undo(std::stack<DObjectState>* undoStack, std::stack<DObjectState>* r
 					sceneGraph.push_back(newObject);
 				
 				}
-				BuildDisplayList(&sceneGraph);
+				BuildDisplayList(&sceneGraph);	// Build display list
 
-				redoStack->push(topState);
-				undoStack->pop();
+				redoStack->push(topState);		// Add top state to redo stack
+				undoStack->pop();				// pop top state from undo stack
 			}
 			else 
 			{
-				auto it = std::find_if(m_displayList->begin(), m_displayList->end(),
+				auto it = std::find_if(m_displayList->begin(), m_displayList->end(),		// find object in display list
 					[&](const DisplayObject& obj) { return obj.m_ID == topState.m_ID; });
 				
-				if (it != m_displayList->end())
+				if (it != m_displayList->end())								// if object exists
 				{
-					it->m_position.x = topState.m_displayRef.m_position.x;
-					it->m_position.y = topState.m_displayRef.m_position.y;
-					it->m_position.z = topState.m_displayRef.m_position.z;
+					it->m_position.x = topState.m_displayRef.m_position.x;	// set position x
+					it->m_position.y = topState.m_displayRef.m_position.y;	// set position y
+					it->m_position.z = topState.m_displayRef.m_position.z;	// set position z
 
-					it->m_orientation.x = topState.m_displayRef.m_orientation.x;
-					it->m_orientation.y = topState.m_displayRef.m_orientation.y;
-					it->m_orientation.z = topState.m_displayRef.m_orientation.z;
+					it->m_orientation.x = topState.m_displayRef.m_orientation.x;	// set orientation x
+					it->m_orientation.y = topState.m_displayRef.m_orientation.y;	// set orientation y
+					it->m_orientation.z = topState.m_displayRef.m_orientation.z;	// set orientation z
 
-					it->m_scale.x = topState.m_displayRef.m_scale.x;
-					it->m_scale.y = topState.m_displayRef.m_scale.y;
-					it->m_scale.z = topState.m_displayRef.m_scale.z;
+					it->m_scale.x = topState.m_displayRef.m_scale.x;	// set scale x
+					it->m_scale.y = topState.m_displayRef.m_scale.y;	// set scale y
+					it->m_scale.z = topState.m_displayRef.m_scale.z;	// set scale z
 				}
 
-				redoStack->push(topState);
-				undoStack->pop();
+				redoStack->push(topState);	// push top state to redo stack
+				undoStack->pop();			// pop top state from undo stack
 			}
 		}
 	}
@@ -920,26 +916,25 @@ void Game::Redo(std::stack<DObjectState>* redoStack, std::stack<DObjectState>* u
 	if (redoStack->size() == 1)
 		return;
 
-	if (!redoStack->empty())
+	if (!redoStack->empty())							// if redo stack is not empty						
 	{
 		for (int i = 0; i < 2; i++)
 		{
-			DObjectState topState = redoStack->top();
+			DObjectState topState = redoStack->top();	// Get last state to redo
 
-			if (topState.m_isNewObject)
+			if (topState.m_isNewObject)					// check if object is new
 			{
-				auto sceneObj = std::find_if(sceneGraph.begin(), sceneGraph.end(),
+				auto sceneObj = std::find_if(sceneGraph.begin(), sceneGraph.end(),    // find object in scene graph
 					[&](const SceneObject& obj) { return obj.ID == topState.m_ID; });
 
-				if (sceneObj != sceneGraph.end())
+				if (sceneObj != sceneGraph.end())		// if object exists in scenegraph
 				{
 					if (i == 0)
-						sceneGraph.erase(sceneObj);
-
+						sceneGraph.erase(sceneObj);		// erase object
 				}
-				else
-				{
-					if (i == 0)
+				else									// else create new object and add to scene graph
+				{ 
+					if (i == 0) 
 					{
 						SceneObject newObject;
 
@@ -965,35 +960,35 @@ void Game::Redo(std::stack<DObjectState>* redoStack, std::stack<DObjectState>* u
 
 						sceneGraph.push_back(newObject);
 						BuildDisplayObject(&newObject);
-						BuildDisplayList(&sceneGraph);
 					}
 				}
-				BuildDisplayList(&sceneGraph);
-	
-				undoStack->push(topState);
-				redoStack->pop();
+				BuildDisplayList(&sceneGraph);	// Build display list
+		
+				undoStack->push(topState);		// push top state to undo stack
+				redoStack->pop();				// pop top state from redo stack							
 			}
 			else 
 			{
-				auto it = std::find_if(m_displayList->begin(), m_displayList->end(),
+				auto it = std::find_if(m_displayList->begin(), m_displayList->end(),		// find object in display list
 					[&](const DisplayObject& obj) { return obj.m_ID == topState.m_ID; });
-				if (it != m_displayList->end())
+
+				if (it != m_displayList->end())												// if object exists
 				{
-					it->m_position.x = topState.m_displayRef.m_position.x;
-					it->m_position.y = topState.m_displayRef.m_position.y;
-					it->m_position.z = topState.m_displayRef.m_position.z;
+					it->m_position.x = topState.m_displayRef.m_position.x;					// set position x
+					it->m_position.y = topState.m_displayRef.m_position.y;					// set position y
+					it->m_position.z = topState.m_displayRef.m_position.z;					// set position z
 
-					it->m_orientation.x = topState.m_displayRef.m_orientation.x;
-					it->m_orientation.y = topState.m_displayRef.m_orientation.y;
-					it->m_orientation.z = topState.m_displayRef.m_orientation.z;
+					it->m_orientation.x = topState.m_displayRef.m_orientation.x;			// set orientation x
+					it->m_orientation.y = topState.m_displayRef.m_orientation.y;			// set orientation y
+					it->m_orientation.z = topState.m_displayRef.m_orientation.z;			// set orientation z
 
-					it->m_scale.x = topState.m_displayRef.m_scale.x;
-					it->m_scale.y = topState.m_displayRef.m_scale.y;
-					it->m_scale.z = topState.m_displayRef.m_scale.z;
+					it->m_scale.x = topState.m_displayRef.m_scale.x;						// set scale x
+					it->m_scale.y = topState.m_displayRef.m_scale.y;						// set scale y
+					it->m_scale.z = topState.m_displayRef.m_scale.z;						// set scale z
 				}
 
-				undoStack->push(topState);
-				redoStack->pop();
+				undoStack->push(topState);	// push top state to undo stack
+				redoStack->pop();			// pop top state from redo stack
 			}
 		}
 	}
@@ -1001,113 +996,109 @@ void Game::Redo(std::stack<DObjectState>* redoStack, std::stack<DObjectState>* u
 
 void Game::Copy(std::vector<int>& selectedIDs, std::vector<SceneObject>& copiedObjects, std::vector<SceneObject>& m_sceneGraph)
 {
-	if (selectedIDs.empty() || selectedIDs[0] <= 0 || m_displayList->empty())
+	if (selectedIDs.empty() || selectedIDs[0] <= 0 || m_displayList->empty())		// if selectedIDs vector is empty or first element is invalid
 		return;
 
-	copiedObjects.clear();
+	copiedObjects.clear();									//  clear copied objects vector
 
-	for (int i = 0; i < selectedIDs.size(); i++)
-	{
-		if (selectedIDs[i] <= -1)
+	for (int i = 0; i < selectedIDs.size(); i++)			// Loop through selected IDs
+	{	
+		if (selectedIDs[i] <= -1)							// if first element is invalid, continue
 			continue;
 
-		SceneObject& copied = m_sceneGraph[selectedIDs[i]];
-		copiedObjects.push_back(copied);
+		SceneObject& copied = m_sceneGraph[selectedIDs[i]];	// get object from scene graph
+		copiedObjects.push_back(copied);					// create a new object and copy the data from the selected object
 	}
 }	
 
 void Game::Paste(std::vector<SceneObject>& copiedObjects, std::vector<SceneObject>& m_sceneGraph)
 {
-	if (copiedObjects.empty())
-		return;
+	if (copiedObjects.empty())						// if copied objects vector is empty
+		return;										// return from function
 
-	for (int i = 0; i < copiedObjects.size(); i++)
+	for (int i = 0; i < copiedObjects.size(); i++)	// Loop through copied objects
 	{
-		SceneObject& newObject = copiedObjects[i];
+		SceneObject& newObject = copiedObjects[i];	// get object from copied objects
 
-		newObject.ID = m_sceneGraph.size() + 1;
+		newObject.ID = m_sceneGraph.size() + 1;		// set new ID
 
-		newObject.posX += 1.0f;
-		newObject.posY += 1.0f;
-		newObject.posZ += 1.0f;
+		newObject.posX += 1.0f;						// set new position x
+		newObject.posY += 1.0f;						// set new position y
+		newObject.posZ += 1.0f;						// set new position z			
 
-		m_sceneGraph.push_back(newObject);
-		BuildDisplayObject(&newObject);
+		m_sceneGraph.push_back(newObject);			// add new object to scene graph
+		BuildDisplayObject(&newObject);				// add new object to display list
+			
+		DisplayObject& object = m_displayList->back();		// get last object in display list
 
-		DisplayObject& object = m_displayList->back();
-
-		DObjectState undoState(object, newObject, newObject.ID, true);
-		m_undoStack->push(undoState);
-		m_undoStack->push(undoState);
+		DObjectState undoState(object, newObject, newObject.ID, true);		// create undo state for new object
+		m_undoStack->push(undoState);										// push undo state to undo stack
+		m_undoStack->push(undoState);										//
 	} 
 }
 
 void Game::Delete(std::vector<int>& selectedIDs, std::vector<SceneObject>& m_sceneGraph)
 {
-	if (selectedIDs.empty() || selectedIDs[0] == -1 || m_displayList->empty())
-		return;
+	if (selectedIDs.empty() || selectedIDs[0] == -1 || m_displayList->empty())		// if selectedIDs vector is empty or first element is invalid
+		return;																		// return from function
 
-	GetSelectedObject(selectedIDs);
+	GetSelectedObject(selectedIDs);													// get selected objects
 
-	for (int i = 0; i < m_selectedObjects.size(); i++)
+	for (int i = 0; i < m_selectedObjects.size(); i++)								// loop through selected objects
 	{
-		DisplayObject& object = *m_selectedObjects[i];
+		DisplayObject& object = *m_selectedObjects[i];								// get selected object
 
-		auto sceneObj = std::find_if(m_sceneGraph.begin(), m_sceneGraph.end(),
+		auto sceneObj = std::find_if(m_sceneGraph.begin(), m_sceneGraph.end(),		// find object in scene graph
 			[&](const SceneObject& obj) { return obj.ID == object.m_ID; });
 
-		
-		if (sceneObj != m_sceneGraph.end())
+		if (sceneObj != m_sceneGraph.end())											// if object exists
 		{
-			DObjectState undoState(object, *sceneObj, object.m_ID, true);
+			DObjectState undoState(object, *sceneObj, object.m_ID, true);			// create undo state for object
+			m_undoStack->push(undoState);											// push undo state to undo stack
 			m_undoStack->push(undoState);
-			m_undoStack->push(undoState);
-
-		
-			m_sceneGraph.erase(sceneObj);  
+			m_sceneGraph.erase(sceneObj);											// erase object from scene graph
 		}
 	}
 
-	
-	BuildDisplayList(&m_sceneGraph);
+	BuildDisplayList(&m_sceneGraph);												// Build display list			
 
-	m_selectedObjects.clear();
+	m_selectedObjects.clear();														// Clear selected object
 }
 
 void Game::FocusOnObject(std::vector<int>& selectedIDs)
 {
-	if (selectedIDs.empty() || selectedIDs[0] == -1 || m_displayList->empty())
-		return;
+	if (selectedIDs.empty() || selectedIDs[0] == -1 || m_displayList->empty())		// if selectedIDs vector is empty or first element is invalid
+		return;																		// return from function
+		
+	GetSelectedObject(selectedIDs);													// get selected objects
 
-	GetSelectedObject(selectedIDs);
+	DirectX::SimpleMath::Vector3 cumulativePos = { 0.f, 0.f, 0.f };					// create cumulative position vector
 
-	DirectX::SimpleMath::Vector3 cumulativePos = { 0.f, 0.f, 0.f };
-
-	for (int i = 0; i < m_selectedObjects.size(); i++)
+	for (int i = 0; i < m_selectedObjects.size(); i++)								// Loop through selected objects
 	{
-		DisplayObject* object = m_selectedObjects[i];
+		DisplayObject* object = m_selectedObjects[i];								// get selected object
 
-		cumulativePos += object->m_position;
+		cumulativePos += object->m_position;										// add position to cumulative position
 	}
 
-	cumulativePos /= m_selectedObjects.size();
+	cumulativePos /= m_selectedObjects.size();										// divide by number of selected objects to get average position
 
-	m_Camera.FocusOnObject(cumulativePos, 10.f);
+	m_Camera.FocusOnObject(cumulativePos, 10.f);									// set camera position to average position of selected objects
 }
 
 void Game::GetSelectedObject(std::vector<int>& selectedIDs)
 {
-	m_selectedObjects.clear();
+	m_selectedObjects.clear();						// clear selected objects vector
 
-	for (int i = 0; i < selectedIDs.size(); i++)
+	for (int i = 0; i < selectedIDs.size(); i++)	// loop through selected IDs
 	{
-		if (selectedIDs[i] <= -1)
+		if (selectedIDs[i] <= -1)					// if first element is invalid, continue
 			continue;
 
-		auto selectedObj = std::find_if(m_displayList->begin(), m_displayList->end(),
+		auto selectedObj = std::find_if(m_displayList->begin(), m_displayList->end(),	// find object in display list
 			[&](const DisplayObject& obj) { return obj.m_ID == selectedIDs[i]; });
 
-		if (selectedObj != m_displayList->end())
-			m_selectedObjects.push_back(&(*selectedObj));
+		if (selectedObj != m_displayList->end())										// if object exists
+			m_selectedObjects.push_back(&(*selectedObj));								// add object to selected objects vector
 	}
 }

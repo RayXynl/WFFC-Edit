@@ -156,26 +156,26 @@ void ObjectManipulationDialog::PushUndo(DisplayObject& object)
 
 void ObjectManipulationDialog::ApplyObjectChange(float value, TransformType transform)
 {
-	if (m_onNewSelection)
-		return;
+	if (m_onNewSelection)					// if user is changing value in edit box
+		return;								// don't apply the change, return
 
-	if (m_currentSelection->empty())
-		return;
+	if (m_currentSelection->empty())		// if no object is selected
+		return;								// don't apply the change, return
 
-	for (int i = 0; i < m_currentSelection->size(); i++)
+	for (int i = 0; i < m_currentSelection->size(); i++)	// Loop through current selection
 	{
-		if (m_currentSelection->at(i) == -1)
+		if (m_currentSelection->at(i) == -1)				// if the ID is -1, skip this object
 			continue;
 
-		
-		auto object = std::find_if(m_displayList->begin(), m_displayList->end(),
+		auto object = std::find_if(m_displayList->begin(), m_displayList->end(),				// Fin dobject in display list
 			[&](const DisplayObject& obj) { return obj.m_ID == m_currentSelection->at(i); });
 
-		PushUndo(*object);
+		PushUndo(*object);									// Push the current state of the object onto the undo stack
 
-		switch (transform)
+		switch (transform)									// switch on object transfrom type
 		{
-			case TransformType::PositionX:	object->m_position.x	= value; break;
+			// apply objecct transforms
+			case TransformType::PositionX:	object->m_position.x	= value; break; 
 			case TransformType::PositionY:	object->m_position.y	= value; break;
 			case TransformType::PositionZ:	object->m_position.z	= value; break;
 			case TransformType::RotationX:	object->m_orientation.x	= value; break;
@@ -186,7 +186,7 @@ void ObjectManipulationDialog::ApplyObjectChange(float value, TransformType tran
 			case TransformType::ScaleZ:		object->m_scale.z		= value; break;
 		}
 
-		PushUndo(*object);
+		PushUndo(*object);									 // Push the new state of the object onto the undo stack
 	}
 }
 

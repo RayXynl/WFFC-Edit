@@ -3,32 +3,28 @@
   "WorkspaceRootPath": "D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{DD0BCFE9-F760-43EB-9C31-BBFD23F397D9}|Win32SimpleSample.vcxproj|D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\Game.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{DD0BCFE9-F760-43EB-9C31-BBFD23F397D9}|Win32SimpleSample.vcxproj|solutionrelative:Game.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{DD0BCFE9-F760-43EB-9C31-BBFD23F397D9}|Win32SimpleSample.vcxproj|D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\Win32SimpleSample.rc||{177559E0-D141-11D0-92DF-00A0C9138C45}|,   b e g i n       % \u0091 )(  \u0022     ",
+      "RelativeMoniker": "D:0:0:{DD0BCFE9-F760-43EB-9C31-BBFD23F397D9}|Win32SimpleSample.vcxproj|solutionrelative:Win32SimpleSample.rc||{177559E0-D141-11D0-92DF-00A0C9138C45}|,   b e g i n       % \u0091 )(  \u0022     "
     },
     {
       "AbsoluteMoniker": "D:0:0:{DD0BCFE9-F760-43EB-9C31-BBFD23F397D9}|Win32SimpleSample.vcxproj|D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\ToolMain.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{DD0BCFE9-F760-43EB-9C31-BBFD23F397D9}|Win32SimpleSample.vcxproj|solutionrelative:ToolMain.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{DD0BCFE9-F760-43EB-9C31-BBFD23F397D9}|Win32SimpleSample.vcxproj|D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\Game.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{DD0BCFE9-F760-43EB-9C31-BBFD23F397D9}|Win32SimpleSample.vcxproj|solutionrelative:Game.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{DD0BCFE9-F760-43EB-9C31-BBFD23F397D9}|Win32SimpleSample.vcxproj|D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\ObjectionCreationDialog.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{DD0BCFE9-F760-43EB-9C31-BBFD23F397D9}|Win32SimpleSample.vcxproj|solutionrelative:ObjectionCreationDialog.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DD0BCFE9-F760-43EB-9C31-BBFD23F397D9}|Win32SimpleSample.vcxproj|D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\ToolMain.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{DD0BCFE9-F760-43EB-9C31-BBFD23F397D9}|Win32SimpleSample.vcxproj|solutionrelative:ToolMain.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{DD0BCFE9-F760-43EB-9C31-BBFD23F397D9}|Win32SimpleSample.vcxproj|D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\DisplayChunk.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{DD0BCFE9-F760-43EB-9C31-BBFD23F397D9}|Win32SimpleSample.vcxproj|solutionrelative:DisplayChunk.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DD0BCFE9-F760-43EB-9C31-BBFD23F397D9}|Win32SimpleSample.vcxproj|D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\Game.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{DD0BCFE9-F760-43EB-9C31-BBFD23F397D9}|Win32SimpleSample.vcxproj|solutionrelative:Game.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DD0BCFE9-F760-43EB-9C31-BBFD23F397D9}|Win32SimpleSample.vcxproj|D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\ObjectionCreationDialog.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{DD0BCFE9-F760-43EB-9C31-BBFD23F397D9}|Win32SimpleSample.vcxproj|solutionrelative:ObjectionCreationDialog.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DD0BCFE9-F760-43EB-9C31-BBFD23F397D9}|Win32SimpleSample.vcxproj|D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\resource.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{DD0BCFE9-F760-43EB-9C31-BBFD23F397D9}|Win32SimpleSample.vcxproj|solutionrelative:resource.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{DD0BCFE9-F760-43EB-9C31-BBFD23F397D9}|Win32SimpleSample.vcxproj|D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\InputCommands.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{DD0BCFE9-F760-43EB-9C31-BBFD23F397D9}|Win32SimpleSample.vcxproj|solutionrelative:InputCommands.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{DD0BCFE9-F760-43EB-9C31-BBFD23F397D9}|Win32SimpleSample.vcxproj|D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\ObjectManipulationDialog.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
@@ -39,16 +35,8 @@
       "RelativeMoniker": "D:0:0:{DD0BCFE9-F760-43EB-9C31-BBFD23F397D9}|Win32SimpleSample.vcxproj|solutionrelative:ObjectManipulationDialog.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DD0BCFE9-F760-43EB-9C31-BBFD23F397D9}|Win32SimpleSample.vcxproj|D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\MFCMain.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{DD0BCFE9-F760-43EB-9C31-BBFD23F397D9}|Win32SimpleSample.vcxproj|solutionrelative:MFCMain.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DD0BCFE9-F760-43EB-9C31-BBFD23F397D9}|Win32SimpleSample.vcxproj|D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\SelectDialogue.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{DD0BCFE9-F760-43EB-9C31-BBFD23F397D9}|Win32SimpleSample.vcxproj|solutionrelative:SelectDialogue.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DD0BCFE9-F760-43EB-9C31-BBFD23F397D9}|Win32SimpleSample.vcxproj|D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\MFCMain.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{DD0BCFE9-F760-43EB-9C31-BBFD23F397D9}|Win32SimpleSample.vcxproj|solutionrelative:MFCMain.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{DD0BCFE9-F760-43EB-9C31-BBFD23F397D9}|Win32SimpleSample.vcxproj|D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\ObjectionCreationDialog.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{DD0BCFE9-F760-43EB-9C31-BBFD23F397D9}|Win32SimpleSample.vcxproj|solutionrelative:ObjectionCreationDialog.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{DD0BCFE9-F760-43EB-9C31-BBFD23F397D9}|Win32SimpleSample.vcxproj|D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\Camera.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
@@ -59,23 +47,32 @@
       "RelativeMoniker": "D:0:0:{DD0BCFE9-F760-43EB-9C31-BBFD23F397D9}|Win32SimpleSample.vcxproj|solutionrelative:Structures.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DD0BCFE9-F760-43EB-9C31-BBFD23F397D9}|Win32SimpleSample.vcxproj|D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\SelectDialogue.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{DD0BCFE9-F760-43EB-9C31-BBFD23F397D9}|Win32SimpleSample.vcxproj|solutionrelative:SelectDialogue.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{DD0BCFE9-F760-43EB-9C31-BBFD23F397D9}|Win32SimpleSample.vcxproj|D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\SelectDialogue.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{DD0BCFE9-F760-43EB-9C31-BBFD23F397D9}|Win32SimpleSample.vcxproj|solutionrelative:SelectDialogue.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{DD0BCFE9-F760-43EB-9C31-BBFD23F397D9}|Win32SimpleSample.vcxproj|D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\Camera.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{DD0BCFE9-F760-43EB-9C31-BBFD23F397D9}|Win32SimpleSample.vcxproj|solutionrelative:Camera.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DD0BCFE9-F760-43EB-9C31-BBFD23F397D9}|Win32SimpleSample.vcxproj|D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\InputCommands.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{DD0BCFE9-F760-43EB-9C31-BBFD23F397D9}|Win32SimpleSample.vcxproj|solutionrelative:InputCommands.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{DD0BCFE9-F760-43EB-9C31-BBFD23F397D9}|Win32SimpleSample.vcxproj|D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\MFCMain.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{DD0BCFE9-F760-43EB-9C31-BBFD23F397D9}|Win32SimpleSample.vcxproj|solutionrelative:MFCMain.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\include\\vector||{3B902123-F8A7-4915-9F01-361F908088D0}|"
+      "AbsoluteMoniker": "D:0:0:{DD0BCFE9-F760-43EB-9C31-BBFD23F397D9}|Win32SimpleSample.vcxproj|D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\MFCMain.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{DD0BCFE9-F760-43EB-9C31-BBFD23F397D9}|Win32SimpleSample.vcxproj|solutionrelative:MFCMain.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DD0BCFE9-F760-43EB-9C31-BBFD23F397D9}|Win32SimpleSample.vcxproj|D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\DisplayChunk.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{DD0BCFE9-F760-43EB-9C31-BBFD23F397D9}|Win32SimpleSample.vcxproj|solutionrelative:DisplayChunk.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{DD0BCFE9-F760-43EB-9C31-BBFD23F397D9}|Win32SimpleSample.vcxproj|D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\Game.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{DD0BCFE9-F760-43EB-9C31-BBFD23F397D9}|Win32SimpleSample.vcxproj|solutionrelative:Game.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DD0BCFE9-F760-43EB-9C31-BBFD23F397D9}|Win32SimpleSample.vcxproj|D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\ToolMain.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{DD0BCFE9-F760-43EB-9C31-BBFD23F397D9}|Win32SimpleSample.vcxproj|solutionrelative:ToolMain.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DD0BCFE9-F760-43EB-9C31-BBFD23F397D9}|Win32SimpleSample.vcxproj|D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\SelectDialogue.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{DD0BCFE9-F760-43EB-9C31-BBFD23F397D9}|Win32SimpleSample.vcxproj|solutionrelative:SelectDialogue.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -84,18 +81,18 @@
       "VerticalTabListWidth": 256,
       "DocumentGroups": [
         {
-          "DockedWidth": 416,
-          "SelectedChildIndex": 0,
+          "DockedWidth": 369,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "Game.cpp",
               "DocumentMoniker": "D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\Game.cpp",
               "RelativeDocumentMoniker": "Game.cpp",
               "ToolTip": "D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\Game.cpp",
               "RelativeToolTip": "Game.cpp",
-              "ViewState": "AgIAAFgDAAAAAAAAAAAAAFkDAAAJAAAAAAAAAA==",
+              "ViewState": "AgIAACQEAAAAAAAAAADwv0kEAABQAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-02-19T17:13:11.161Z",
               "IsPinned": true,
@@ -103,130 +100,142 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
+              "Title": "Win32SimpleSample.rc - IDD_ObjCreate - Dialog",
+              "DocumentMoniker": "D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\Win32SimpleSample.rc",
+              "RelativeDocumentMoniker": "Win32SimpleSample.rc",
+              "ToolTip": "D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\Win32SimpleSample.rc - IDD_ObjCreate - Dialog",
+              "RelativeToolTip": "Win32SimpleSample.rc - IDD_ObjCreate - Dialog",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001005|",
+              "WhenOpened": "2025-04-21T13:40:09.186Z",
+              "EditorCaption": " - IDD_ObjCreate - Dialog"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "ObjectionCreationDialog.cpp",
               "DocumentMoniker": "D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\ObjectionCreationDialog.cpp",
               "RelativeDocumentMoniker": "ObjectionCreationDialog.cpp",
               "ToolTip": "D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\ObjectionCreationDialog.cpp",
               "RelativeToolTip": "ObjectionCreationDialog.cpp",
-              "ViewState": "AgIAAC0AAAAAAAAAAAAlwFAAAAAnAAAAAAAAAA==",
+              "ViewState": "AgIAAO0AAAAAAAAAAAAlwOsAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-04-16T18:26:27.752Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 8,
               "Title": "ObjectionCreationDialog.h",
               "DocumentMoniker": "D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\ObjectionCreationDialog.h",
               "RelativeDocumentMoniker": "ObjectionCreationDialog.h",
               "ToolTip": "D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\ObjectionCreationDialog.h",
               "RelativeToolTip": "ObjectionCreationDialog.h",
-              "ViewState": "AgIAACQAAAAAAAAAAAAAAEAAAAATAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAEAAAAATAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2025-04-16T18:21:49.688Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 9,
               "Title": "Camera.h",
               "DocumentMoniker": "D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\Camera.h",
               "RelativeDocumentMoniker": "Camera.h",
               "ToolTip": "D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\Camera.h",
               "RelativeToolTip": "Camera.h",
-              "ViewState": "AgIAAAkAAAAAAAAAAAAAACoAAAAaAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACoAAAAaAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2025-03-24T12:09:59.478Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 10,
               "Title": "Structures.h",
               "DocumentMoniker": "D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\Structures.h",
               "RelativeDocumentMoniker": "Structures.h",
               "ToolTip": "D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\Structures.h",
               "RelativeToolTip": "Structures.h",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAABkAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2025-03-24T12:05:32.108Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 11,
               "Title": "SelectDialogue.cpp",
               "DocumentMoniker": "D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\SelectDialogue.cpp",
               "RelativeDocumentMoniker": "SelectDialogue.cpp",
               "ToolTip": "D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\SelectDialogue.cpp",
               "RelativeToolTip": "SelectDialogue.cpp",
-              "ViewState": "AgIAABUAAAAAAAAAAAAAAEUAAAARAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAEUAAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-04-02T21:55:39.014Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 12,
               "Title": "Camera.cpp",
               "DocumentMoniker": "D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\Camera.cpp",
               "RelativeDocumentMoniker": "Camera.cpp",
               "ToolTip": "D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\Camera.cpp",
               "RelativeToolTip": "Camera.cpp",
-              "ViewState": "AgIAAEQAAAAAAAAAAAAEwFQAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAIYAAAAAAAAAAAAEwKEAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-03-24T12:09:56.835Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 13,
               "Title": "MFCMain.h",
               "DocumentMoniker": "D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\MFCMain.h",
               "RelativeDocumentMoniker": "MFCMain.h",
               "ToolTip": "D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\MFCMain.h",
               "RelativeToolTip": "MFCMain.h",
-              "ViewState": "AgIAAAwAAAAAAAAAAAAAACwAAAAUAAAAAAAAAA==",
+              "ViewState": "AgIAABIAAAAAAAAAAAAAACwAAAAUAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2025-03-19T22:00:44.851Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 14,
               "Title": "MFCMain.cpp",
               "DocumentMoniker": "D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\MFCMain.cpp",
               "RelativeDocumentMoniker": "MFCMain.cpp",
               "ToolTip": "D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\MFCMain.cpp",
               "RelativeToolTip": "MFCMain.cpp",
-              "ViewState": "AgIAABUAAAAAAAAAAAArwCwAAAABAAAAAAAAAA==",
+              "ViewState": "AgIAACMAAAAAAAAAAAAAAI4AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-03-10T18:54:43.521Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 15,
               "Title": "Game.h",
               "DocumentMoniker": "D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\Game.h",
               "RelativeDocumentMoniker": "Game.h",
               "ToolTip": "D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\Game.h",
               "RelativeToolTip": "Game.h",
-              "ViewState": "AgIAABoAAAAAAAAAAAAlwBYAAAAKAAAAAAAAAA==",
+              "ViewState": "AgIAAIAAAAAAAAAAAAAlwBYAAAAKAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2025-02-19T18:22:47.788Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 16,
               "Title": "ToolMain.h",
               "DocumentMoniker": "D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\ToolMain.h",
               "RelativeDocumentMoniker": "ToolMain.h",
               "ToolTip": "D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\ToolMain.h",
               "RelativeToolTip": "ToolMain.h",
-              "ViewState": "AgIAABoAAAAAAAAAAAAlwC4AAAAFAAAAAAAAAA==",
+              "ViewState": "AgIAAAsAAAAAAAAAAAAlwDwAAAArAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2025-02-19T18:21:11.707Z",
               "EditorCaption": ""
@@ -239,7 +248,7 @@
               "RelativeDocumentMoniker": "ToolMain.cpp",
               "ToolTip": "D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\ToolMain.cpp",
               "RelativeToolTip": "ToolMain.cpp",
-              "ViewState": "AgIAAFgBAAAAAAAAAAAewHABAAAUAAAAAAAAAA==",
+              "ViewState": "AgIAAO8BAAAAAAAAAAAAAAUCAABmAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-02-19T17:20:33.56Z",
               "EditorCaption": ""
@@ -247,38 +256,25 @@
           ]
         },
         {
-          "DockedWidth": 98,
-          "SelectedChildIndex": 0,
+          "DockedWidth": 145,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "resource.h",
-              "DocumentMoniker": "D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\resource.h",
-              "RelativeDocumentMoniker": "resource.h",
-              "ToolTip": "D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\resource.h",
-              "RelativeToolTip": "resource.h",
-              "ViewState": "AgIAAA8AAAAAAAAAAAAAACQAAAAQAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-04-16T22:25:33.712Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 7,
               "Title": "ObjectManipulationDialog.h",
               "DocumentMoniker": "D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\ObjectManipulationDialog.h",
               "RelativeDocumentMoniker": "ObjectManipulationDialog.h",
               "ToolTip": "D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\ObjectManipulationDialog.h",
               "RelativeToolTip": "ObjectManipulationDialog.h",
-              "ViewState": "AgIAACwAAAAAAAAAAAAAwDMAAAAaAAAAAAAAAA==",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAAwDMAAAAaAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2025-03-19T22:32:53.176Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 17,
               "Title": "SelectDialogue.h",
               "DocumentMoniker": "D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\SelectDialogue.h",
               "RelativeDocumentMoniker": "SelectDialogue.h",
@@ -286,55 +282,43 @@
               "RelativeToolTip": "SelectDialogue.h",
               "ViewState": "AgIAAAkAAAAAAAAAAAAAACIAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-04-02T21:55:39.406Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-02T21:55:39.406Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 6,
               "Title": "ObjectManipulationDialog.cpp",
               "DocumentMoniker": "D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\ObjectManipulationDialog.cpp",
               "RelativeDocumentMoniker": "ObjectManipulationDialog.cpp",
               "ToolTip": "D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\ObjectManipulationDialog.cpp",
               "RelativeToolTip": "ObjectManipulationDialog.cpp",
-              "ViewState": "AgIAAA0BAAAAAAAAAAAlwDUBAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAJsAAAAAAAAAAAAlwLwAAAAdAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-03-19T22:06:05.648Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
-              "Title": "vector",
-              "DocumentMoniker": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\include\\vector",
-              "ToolTip": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\include\\vector",
-              "ViewState": "AgIAAFQIAAAAAAAAAAAjwGEIAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2025-04-03T10:27:11.483Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 5,
               "Title": "InputCommands.h",
               "DocumentMoniker": "D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\InputCommands.h",
               "RelativeDocumentMoniker": "InputCommands.h",
               "ToolTip": "D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\InputCommands.h",
               "RelativeToolTip": "InputCommands.h",
-              "ViewState": "AgIAACAAAAAAAAAAAAAswCoAAAASAAAAAAAAAA==",
+              "ViewState": "AgIAACQAAAAAAAAAAAAAACoAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2025-03-21T00:07:59.912Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 4,
               "Title": "DisplayChunk.cpp",
               "DocumentMoniker": "D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\DisplayChunk.cpp",
               "RelativeDocumentMoniker": "DisplayChunk.cpp",
               "ToolTip": "D:\\CMP405\\WFFC-Edit\\WOFFCEdit\\DisplayChunk.cpp",
               "RelativeToolTip": "DisplayChunk.cpp",
-              "ViewState": "AgIAALMAAAAAAAAAAAAiwLwAAAAFAAAAAAAAAA==",
+              "ViewState": "AgIAAKoAAAAAAAAAAAAiwLwAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-04-01T11:48:04.047Z",
               "EditorCaption": ""

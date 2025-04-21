@@ -116,6 +116,7 @@ void MFCMain::ToolBarButton1()
 
 void MFCMain::ToolBarButton2()
 {
+	// Create the object manipulation dialog box
 	m_ToolObjectManipDialog.Create(IDD_ObjManip);
 	m_ToolObjectManipDialog.ShowWindow(SW_SHOW);
 	m_ToolObjectManipDialog.SetObjectData(&m_ToolSystem.m_sceneGraph, &m_ToolSystem.m_selectedObject, &m_ToolSystem.m_displayList, &m_toolInputCommands);
@@ -123,6 +124,7 @@ void MFCMain::ToolBarButton2()
 
 void MFCMain::ToolBarButton3()
 {
+	// Create the object creation dialog box
 	m_toolObjectCreationDialog.Create(IDD_ObjCreate);
 	m_toolObjectCreationDialog.ShowWindow(SW_SHOW);
 	m_toolObjectCreationDialog.SetObjectData(&m_ToolSystem.m_sceneGraph, &m_ToolSystem.m_selectedObject, &m_ToolSystem.m_displayList, &m_toolInputCommands);

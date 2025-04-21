@@ -29,21 +29,26 @@ struct InputCommands
 
 	bool deleteDown;
 	
+	bool copyDown;
+	bool copyDownPrevState;
+	bool pasteDown;
+	bool pasteDownPrevState;
 
 	bool g_key_down;
 	bool z_key_down;
 	bool y_key_down;
 
 	bool c_key_down;
-	bool c_key_prev;
+
 	bool v_key_down;
-	bool v_key_prev;
+
 
 	bool f_key_down;
 	bool focus_prev; 
 	int editMode;
 
 };
+
 enum EditMode
 {
 	CameraMove = 0,

@@ -48,15 +48,14 @@ void ObjectionCreationDialog::SetStacks(std::stack<DObjectState>* undoStack, std
 
 void ObjectionCreationDialog::CreateObject(std::string modelPath, std::string texPath, XMFLOAT3 position, XMFLOAT3 rotation, XMFLOAT3 scale)
 {
-	// Create a new SceneObject
 	SceneObject newSceneObject;
 
+	// Set the properties of the new scene object
 	newSceneObject.ID = FindMaxCurrentID();
 	newSceneObject.chunk_ID = 0;
 	newSceneObject.model_path = m_path + modelPath;
 	newSceneObject.tex_diffuse_path = m_path + texPath;
 
-	// Default transform
 	newSceneObject.posX = position.x;
 	newSceneObject.posY = position.y;
 	newSceneObject.posZ = position.z;
@@ -67,7 +66,6 @@ void ObjectionCreationDialog::CreateObject(std::string modelPath, std::string te
 	newSceneObject.scaY = scale.x;
 	newSceneObject.scaZ = scale.x;
 
-	// Default settings
 	newSceneObject.render = 1;
 	newSceneObject.collision = 0;
 	newSceneObject.collision_mesh = "";
@@ -75,19 +73,16 @@ void ObjectionCreationDialog::CreateObject(std::string modelPath, std::string te
 	newSceneObject.destructable = 0;
 	newSceneObject.health_amount = 0;
 
-	// Editor flags
 	newSceneObject.editor_render = 1;
 	newSceneObject.editor_texture_vis = 1;
 	newSceneObject.editor_normals_vis = 0;
 	newSceneObject.editor_collision_vis = 0;
 	newSceneObject.editor_pivot_vis = 0;
 
-	// Pivot
 	newSceneObject.pivotX = 0.0f;
 	newSceneObject.pivotY = 0.0f;
 	newSceneObject.pivotZ = 0.0f;
 
-	// Audio
 	newSceneObject.audio_path = "";
 	newSceneObject.volume = 1.0f;
 	newSceneObject.pitch = 1.0f;
@@ -98,7 +93,6 @@ void ObjectionCreationDialog::CreateObject(std::string modelPath, std::string te
 	newSceneObject.min_dist = 1.0f;
 	newSceneObject.max_dist = 15.0f;
 
-	// AI & Camera
 	newSceneObject.AINode = 0;
 	newSceneObject.camera = 0;
 	newSceneObject.path_node = 0;
@@ -106,11 +100,9 @@ void ObjectionCreationDialog::CreateObject(std::string modelPath, std::string te
 	newSceneObject.path_node_end = 0;
 	newSceneObject.parent_id = -1;
 
-	// Name & Visuals
 	newSceneObject.name = "new";
 	newSceneObject.editor_wireframe = 0;
 
-	// Light settings
 	newSceneObject.light_type = 0;
 	newSceneObject.light_diffuse_r = 1.0f;
 	newSceneObject.light_diffuse_g = 1.0f;
@@ -123,10 +115,9 @@ void ObjectionCreationDialog::CreateObject(std::string modelPath, std::string te
 	newSceneObject.light_linear = 0.09f;
 	newSceneObject.light_quadratic = 0.032f;
 
-	m_objectCreationFlag = true;
+	m_objectCreationFlag = true;				// set the object creation flag to true
 
-	// Add the new object to the scene graph
-	m_sceneGraph->push_back(newSceneObject);
+	m_sceneGraph->push_back(newSceneObject); 	// Add the new object to the scene graph
 }
 
 void ObjectionCreationDialog::DoDataExchange(CDataExchange* pDX)
@@ -176,28 +167,29 @@ void ObjectionCreationDialog::OnEnChangeMeshedit()
 
 void ObjectionCreationDialog::OnBnClickedCreateobjbut()
 {
-	CString meshPath;
-	m_mesh.GetWindowText(meshPath);
-	std::string mesh = CT2A(meshPath.GetString());
+	CString meshPath;									// create a string to hold the mesh path
+	m_mesh.GetWindowText(meshPath);						// get the mesh path from the edit box
+	std::string mesh = CT2A(meshPath.GetString());		// convert to string
 	
-	std::ifstream meshFile(m_path + mesh);
-	if (!meshFile.good())
+	std::ifstream meshFile(m_path + mesh);				// open the mesh file
+	if (!meshFile.good())								// check if the file is good
 	{
-		MessageBox(_T("Mesh file not found!"), _T("Error"), MB_OK | MB_ICONERROR);
-		return;
+		MessageBox(_T("Mesh file not found"), _T("Error"), MB_OK | MB_ICONERROR);	// show error message if file cannot be opened
+		return;																		// return from the function
 	}
 
-	CString texPath;
-	m_texture.GetWindowText(texPath);
-	std::string tex = CT2A(texPath.GetString());
+	CString texPath;									// create a string to hold the texture path
+	m_texture.GetWindowText(texPath);					// get the texture path from the edit box
+	std::string tex = CT2A(texPath.GetString());		// convert to string
 
-	std::ifstream texFile(m_path + tex);
-	if (!texFile.good())
+	std::ifstream texFile(m_path + tex);				// open the texture file
+	if (!texFile.good())								// check if the file is good
 	{
-		MessageBox(_T("Mesh file not found!"), _T("Error"), MB_OK | MB_ICONERROR);
-		return;
+		MessageBox(_T("Texture file not found"), _T("Error"), MB_OK | MB_ICONERROR);	// show error message if file cannot be opened
+		return;																			// return from the function
 	}
 
+	// Get positional data
 	XMFLOAT3 position = XMFLOAT3(0, 0, 0);
 
 	CString posX;
@@ -212,6 +204,7 @@ void ObjectionCreationDialog::OnBnClickedCreateobjbut()
 	m_editZ.GetWindowText(posZ);
 	position.z = _ttof(posZ);
 
+	// Get rotation data
 	XMFLOAT3 rotation = XMFLOAT3(0, 0, 0);
 
 	CString rotX;
@@ -226,6 +219,7 @@ void ObjectionCreationDialog::OnBnClickedCreateobjbut()
 	m_RotZ.GetWindowText(posZ);
 	rotation.z = _ttof(posZ);
 
+	// Get scale data
 	XMFLOAT3 scale = XMFLOAT3(1, 1, 1);
 
 	CString scaleX;
@@ -240,9 +234,10 @@ void ObjectionCreationDialog::OnBnClickedCreateobjbut()
 	m_ScaleZ.GetWindowText(scaleZ);
 	scale.z = _ttof(scaleZ);
 
-	CreateObject(mesh, tex, position, rotation, scale);
+	CreateObject(mesh, tex, position, rotation, scale);		// Create new object
 }
 
+// Find the maximum ID in the scene graph and return next ID
 int ObjectionCreationDialog::FindMaxCurrentID()
 {
 	int maxID = 0;

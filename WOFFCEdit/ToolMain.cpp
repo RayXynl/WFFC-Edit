@@ -52,24 +52,29 @@ void ToolMain::onActionInitialise(HWND handle, int width, int height, ObjectMani
 	}
 
 	//zero input commands
-	m_toolInputCommands->forward = false;
-	m_toolInputCommands->back = false;
-	m_toolInputCommands->left = false;
-	m_toolInputCommands->right = false;
-	m_toolInputCommands->mouse_Mid_Down = false;
-	m_toolInputCommands->mouse_LB_Down = false;
-	m_toolInputCommands->mouse_X = 0;
-	m_toolInputCommands->mouse_Y = 0;
+	m_toolInputCommands->forward			= false;
+	m_toolInputCommands->back				= false;
+	m_toolInputCommands->left				= false;
+	m_toolInputCommands->right				= false;
+	m_toolInputCommands->mouse_Mid_Down		= false;
+	m_toolInputCommands->mouse_LB_Down		= false;
 
-	m_toolInputCommands->g_key_down = false;
+	m_toolInputCommands->g_key_down			= false;
 
-	m_toolInputCommands->undoDown = false;
-	m_toolInputCommands->undoDownPrevState = false;
+	m_toolInputCommands->undoDown			= false;
+	m_toolInputCommands->undoDownPrevState	= false;
+	m_toolInputCommands->redoDown			= false;
+	m_toolInputCommands->redoDownPrevState	= false;
 
+	m_toolInputCommands->deleteDown			= false;
 
-	m_toolInputCommands->focus_prev = false;
+	m_toolInputCommands->f_key_down			= false;
+	m_toolInputCommands->focus_prev			= false;
 
-	m_toolInputCommands->editMode = CameraMove;
+	m_toolInputCommands->editMode			= CameraMove;
+
+	m_toolInputCommands->mouse_X			= 0;
+	m_toolInputCommands->mouse_Y			= 0;
 
 	onActionLoad();
 }
@@ -293,135 +298,135 @@ void ToolMain::onActionSaveTerrain()
 
 void ToolMain::Tick(MSG *msg)
 {
-	//do we have a selection
-	//do we have a mode
-	//are we clicking / dragging /releasing
-	//has something changed
-		//update Scenegraph
-		//add to scenegraph
-		//resend scenegraph to Direct X renderer
-	CWnd* FocusedWnd = CWnd::GetFocus();
-	if (FocusedWnd)
+	if (CWnd::GetFocus())																		// Get currently focused window
 	{
-		CString focusedWindowName;
-		FocusedWnd->GetWindowText(focusedWindowName);  
+		CString focusedWindowName;																// Create string to hold name of current focused window
+		CWnd::GetFocus()->GetWindowText(focusedWindowName);										// Get the name of the focused window
 
-		if (focusedWindowName.CompareNoCase(_T("World of Flim-Flam Craft Editor")) == 0)
+		if (focusedWindowName.CompareNoCase(_T("World of Flim-Flam Craft Editor")) == 0)		// Check if focused window is the main editor window
 		{
-			if (m_toolInputCommands->mouse_LB_Down)
+			if (m_toolInputCommands->mouse_LB_Down)												// If left mouse button is down
 			{
-				m_selectedObject = m_d3dRenderer.MousePicking(m_toolInputCommands->ctrlDown);
-				m_toolInputCommands->mouse_LB_Down = false;
-				if (IsWindow(m_ToolObjectManipDialog->GetSafeHwnd()))  // Ensure the window exists
+				m_selectedObject = m_d3dRenderer.MousePicking(m_toolInputCommands->ctrlDown);	// Get selected object
+				m_toolInputCommands->mouse_LB_Down = false;										// Reset left mouse button state
+				if (IsWindow(m_ToolObjectManipDialog->GetSafeHwnd()))							// Check if object manipulation dialog box has been opened
 				{
-					m_ToolObjectManipDialog->SetObjectData(&m_displayList);
-					m_ToolObjectManipDialog->SetStacks(&m_undoStack, &m_redoStack);
+					m_ToolObjectManipDialog->SetObjectData(&m_displayList);						// Send display list to dialog box
+					m_ToolObjectManipDialog->SetStacks(&m_undoStack, &m_redoStack);				// Set undo and redo stacks
 				}
 			}
 		}
 	}
 
-	if (m_selectedObject.size() > 0)
+	if (m_selectedObject.size() > 0)													// If object(s) have been selected
 	{
-		if (m_toolInputCommands->left || m_toolInputCommands->right || m_toolInputCommands->forward || m_toolInputCommands->back || m_toolInputCommands->up || m_toolInputCommands->down)
+		if (m_toolInputCommands->left || m_toolInputCommands->right ||					// WASD & EQ input check
+			m_toolInputCommands->forward || m_toolInputCommands->back || 
+			m_toolInputCommands->up || m_toolInputCommands->down)
 		{
-			if (!m_objManipHeld)
+			if (!m_objManipHeld)														// if movement is not ongoing 
 			{
-				m_d3dRenderer.GetSelectedObject(m_selectedObject);
+				m_d3dRenderer.GetSelectedObject(m_selectedObject);						// Assign selected objects accoring to IDs 
 
-				for (int i = 0; i < m_d3dRenderer.GetSelectedObjects().size(); i++)
+				for (int i = 0; i < m_d3dRenderer.GetSelectedObjects().size(); i++)		// Loop through selected objects
 				{
-					if (m_selectedObject[i] == -1)
-						break;
+					if (m_selectedObject[i] == -1)										// If no object is selected
+						break;															// break
 
-					DisplayObject& object = *m_d3dRenderer.GetSelectedObjects()[i];
-					DObjectState undoState(object, object.m_ID, false);
-					m_undoStack.push(undoState);
+					DisplayObject& object = *m_d3dRenderer.GetSelectedObjects()[i];		// Get selected object
+					DObjectState undoState(object, object.m_ID, false);					// Create undo state
+					m_undoStack.push(undoState);										// Push undo state to undo stack
 				}
-				m_objManipHeld = true;
+				m_objManipHeld = true;													// movement is ongoing
 			}
 
-			if (m_toolInputCommands->editMode == ModelMove)
-				m_d3dRenderer.MoveObjects(m_selectedObject);
-			if (m_toolInputCommands->editMode == ModelRotate)
-				m_d3dRenderer.RotateObjects(m_selectedObject);
-			if (m_toolInputCommands->editMode == ModelScale)
-				m_d3dRenderer.ScaleObjects(m_selectedObject);
+			if (m_toolInputCommands->editMode == ModelMove)								// If edit mode is ModelMove
+				m_d3dRenderer.MoveObjects(m_selectedObject);							// WASD & EQ input moves selected objects
+			if (m_toolInputCommands->editMode == ModelRotate)							// If edit mode is ModelRotate
+				m_d3dRenderer.RotateObjects(m_selectedObject);							// WASD & EQ input rotates selected objects
+			if (m_toolInputCommands->editMode == ModelScale)							// If edit mode is ModelScale				
+				m_d3dRenderer.ScaleObjects(m_selectedObject);							// WASD & EQ input scales selected objects
 		}
-		else if (m_objManipHeld)
+		else if (m_objManipHeld)														// If movement is ongoing
 		{
-			for (int i = 0; i < m_d3dRenderer.GetSelectedObjects().size(); i++)
-			{
-				if (m_selectedObject[i] == -1)
-					break;
+			m_d3dRenderer.GetSelectedObject(m_selectedObject);							// Assign selected objects accoring to IDs 
 
-				DisplayObject& object = *m_d3dRenderer.GetSelectedObjects()[i];
-				DObjectState undoState(object, object.m_ID, false);
-				m_undoStack.push(undoState);
+			for (int i = 0; i < m_d3dRenderer.GetSelectedObjects().size(); i++)			// Loop through selected objects
+			{
+				if (m_selectedObject[i] == -1)											// If no object is selected
+					break;																// break					
+
+				DisplayObject& object = *m_d3dRenderer.GetSelectedObjects()[i];			// Get selected object
+				DObjectState undoState(object, object.m_ID, false);						// Create undo state
+				m_undoStack.push(undoState);											// Push undo state to undo stack
 			}
-			m_objManipHeld = false;
+			m_objManipHeld = false;														// movement is not ongoing
 		}
 	}
 	
-
-	if (m_toolInputCommands->undoDown && !m_toolInputCommands->undoDownPrevState)
+	// Undo and Redo function calls /////
+	if (m_toolInputCommands->undoDown && !m_toolInputCommands->undoDownPrevState)		// if undo keys are pressed 
 	{
-		m_d3dRenderer.Undo(&m_undoStack, &m_redoStack, m_sceneGraph);
-		m_ToolObjectManipDialog->SetStacks(&m_undoStack, &m_redoStack);
+		m_d3dRenderer.Undo(&m_undoStack, &m_redoStack, m_sceneGraph);					// Undo previous action
+		m_ToolObjectManipDialog->SetStacks(&m_undoStack, &m_redoStack);					// Set undo and redo stacks
 	}
-		m_toolInputCommands->undoDownPrevState = m_toolInputCommands->undoDown;
+	m_toolInputCommands->undoDownPrevState = m_toolInputCommands->undoDown;				// Set prev undo state
 
-	if (m_toolInputCommands->redoDown && !m_toolInputCommands->redoDownPrevState)
+	if (m_toolInputCommands->redoDown && !m_toolInputCommands->redoDownPrevState)		// if redo keys are pressed
 	{
-		m_d3dRenderer.Redo(&m_redoStack, &m_undoStack, m_sceneGraph);
-		m_ToolObjectManipDialog->SetStacks(&m_undoStack, &m_redoStack);
+		m_d3dRenderer.Redo(&m_redoStack, &m_undoStack, m_sceneGraph);					// Redo previous action
+		m_ToolObjectManipDialog->SetStacks(&m_undoStack, &m_redoStack);					// Set undo and redo stacks
 	}
-		m_toolInputCommands->redoDownPrevState = m_toolInputCommands->redoDown;
+	m_toolInputCommands->redoDownPrevState = m_toolInputCommands->redoDown;				// Set prev redo state
 
-	if (m_toolInputCommands->c_key_down && !m_toolInputCommands->c_key_prev)
+
+	///// Copy and paste function calls /////
+	if (m_toolInputCommands->copyDown && !m_toolInputCommands->copyDownPrevState)		// if copy keys are pressed 
 	{
-		m_d3dRenderer.Copy(m_selectedObject, m_copyList, m_sceneGraph);
+		m_d3dRenderer.Copy(m_selectedObject, m_copyList, m_sceneGraph);					// Copy selected objects
 	}
-		m_toolInputCommands->c_key_prev = m_toolInputCommands->c_key_down;
+	m_toolInputCommands->copyDownPrevState = m_toolInputCommands->copyDown;				// Set prev copy state
 
-	if (m_toolInputCommands->v_key_down && !m_toolInputCommands->v_key_prev)
+	if (m_toolInputCommands->pasteDown && !m_toolInputCommands->pasteDownPrevState)		// if paste keys are pressed
 	{
-		m_d3dRenderer.Paste(m_copyList, m_sceneGraph);
+		m_d3dRenderer.Paste(m_copyList, m_sceneGraph);									// Paste copied objects		
 	}
-		m_toolInputCommands->v_key_prev = m_toolInputCommands->v_key_down;
+	m_toolInputCommands->pasteDownPrevState = m_toolInputCommands->pasteDown;			// set prev paste state
 
-
-	if (m_toolInputCommands->f_key_down && !m_toolInputCommands->focus_prev)
+	// Focus on object function call /////
+	if (m_toolInputCommands->f_key_down && !m_toolInputCommands->focus_prev)			// if focus key is pressed
 	{
-		m_d3dRenderer.FocusOnObject(m_selectedObject);
+		m_d3dRenderer.FocusOnObject(m_selectedObject);									// Focus camera on selected object
 	}
-		m_toolInputCommands->focus_prev = m_toolInputCommands->f_key_down;
+	m_toolInputCommands->focus_prev = m_toolInputCommands->f_key_down;					// set prev focus state
 
-	if (m_toolInputCommands->deleteDown)
+	///// Delete object function calls /////
+	if (m_toolInputCommands->deleteDown)												// if delete key is pressed
 	{
-		m_d3dRenderer.Delete(m_selectedObject, m_sceneGraph);
-		m_selectedObject.clear();
+		m_d3dRenderer.Delete(m_selectedObject, m_sceneGraph);							// Delete selected objects			
+		m_selectedObject.clear();														// Clear selected object IDs to avoid crashes
 	}
 
-	if (m_ToolObjectCreationDialog->GetObjectCreationFlag())
+	///// Create new object functionality /////
+	if (m_ToolObjectCreationDialog->GetObjectCreationFlag())							// If new object has been created
 	{
-		m_d3dRenderer.BuildDisplayList(&m_sceneGraph);
-		DisplayObject& object = m_displayList.back();
+		m_d3dRenderer.BuildDisplayList(&m_sceneGraph);									// Build display list
+		DisplayObject& object = m_displayList.back();									// get new object
 
-		DObjectState undoState(object, m_sceneGraph.back(), m_sceneGraph.back().ID, true);
+		DObjectState undoState(object, m_sceneGraph.back(), m_sceneGraph.back().ID, true);	// Create undo state
+		m_undoStack.push(undoState);														// Push undo states
 		m_undoStack.push(undoState);
-		m_undoStack.push(undoState);
-		m_ToolObjectCreationDialog->SetObjectCreationFlag(false);
+		m_ToolObjectCreationDialog->SetObjectCreationFlag(false);							// Reset object creation flag
 	}
 
-
-	if (IsWindow(m_ToolObjectManipDialog->GetSafeHwnd()))  // Ensure the window exists
+	
+	if (IsWindow(m_ToolObjectManipDialog->GetSafeHwnd()))				// Check if object manipulation dialog box has been opened
 	{
-		if (m_toolInputCommands->editMode == ModelMove || 
+		if (m_toolInputCommands->editMode == ModelMove ||				// If any of the edit modes are active
 			m_toolInputCommands->editMode == ModelRotate ||
 			m_toolInputCommands->editMode == ModelScale)
 		{
-			m_ToolObjectManipDialog->SetObjectData(&m_displayList);
+			m_ToolObjectManipDialog->SetObjectData(&m_displayList);		// Set object data
 		}
 	}
 
@@ -479,11 +484,11 @@ void ToolMain::UpdateInput(MSG * msg)
 	if (m_keyArray['Q'])	m_toolInputCommands->down = true;
 	else					m_toolInputCommands->down = false;
 
-	if (m_keyArray['Z'])	m_toolInputCommands->undoDown = true;
-	else					m_toolInputCommands->undoDown = false;
+	if (m_keyArray['Z'])	m_toolInputCommands->z_key_down = true;
+	else					m_toolInputCommands->z_key_down = false;
 
-	if (m_keyArray['Y'])	m_toolInputCommands->redoDown = true;
-	else					m_toolInputCommands->redoDown = false;
+	if (m_keyArray['Y'])	m_toolInputCommands->y_key_down = true;
+	else					m_toolInputCommands->y_key_down = false;
 
 
 	if (m_keyArray['C'])	m_toolInputCommands->c_key_down = true;
@@ -504,5 +509,19 @@ void ToolMain::UpdateInput(MSG * msg)
 	if (m_keyArray[VK_DELETE])	m_toolInputCommands->deleteDown = true;
 	else						m_toolInputCommands->deleteDown = false;
 
+
+	// Key combinations
+	if (m_toolInputCommands->z_key_down && m_toolInputCommands->ctrlDown) 	m_toolInputCommands->undoDown = true;
+	else                                                                    m_toolInputCommands->undoDown = false;
+
+	if (m_toolInputCommands->y_key_down && m_toolInputCommands->ctrlDown) 	m_toolInputCommands->redoDown = true;
+	else                                                                    m_toolInputCommands->redoDown = false;
+		
+
+	if (m_toolInputCommands->c_key_down && m_toolInputCommands->ctrlDown) 	m_toolInputCommands->copyDown = true;
+	else                                                                    m_toolInputCommands->copyDown = false;
+		
+	if (m_toolInputCommands->v_key_down && m_toolInputCommands->ctrlDown) 	m_toolInputCommands->pasteDown = true;
+	else                                                                    m_toolInputCommands->pasteDown = false;
 
 }
